@@ -1,0 +1,34 @@
+{
+  "name": "sanity-backend",
+  "version": "1.0.0",
+  "description": "Backend for Sanity Application",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "start:dev": "nodemon index.js",
+    "test": "npm run lint && npm run test:int && npm run test:unit",
+    "test:unit": "NODE_ENV=test mocha --recursive tests/unit/",
+    "test:unit:watch": "NODE_ENV=test M mocha --watch --recursive tests/unit/",
+    "test:int": "NODE_ENV=test MONGO_DB_URL=\"localhost/sanity_test\" mocha --recursive tests/int/",
+    "test:int:watch": "NODE_ENV=test MONGO_DB_URL=\"localhost/sanity_test\" mocha --watch  --recursive tests/int/"
+  },
+  "author": "Brian Anglin <banglin@usc.edu>",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
+    "express": "^4.15.4",
+    "express-validator": "^4.2.0",
+    "jsonwebtoken": "^8.0.1",
+    "mongorito": "^3.0.4",
+    "passport": "^0.4.0",
+    "passport-jwt": "^3.0.0",
+    "require-dir": "^0.3.2"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^3.5.3",
+    "nodemon": "^1.12.1",
+    "supertest": "^3.0.0"
+  }
+}
