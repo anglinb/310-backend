@@ -3,12 +3,14 @@ const fs = require('fs')
 const path = require('path')
 const { Database } = require('mongorito')
 const plugins = require('./plugins')
+const timestamps = require('mongorito-timestamps')
 
 const basename = path.basename(module.filename)
 var exp = {}
 
 // Connect the database
 const db = new Database(process.env.MONGO_DB_URL || 'localhost/sanity')
+db.use(timestamps())
 exp.mongo = db
 
 fs.readdirSync(__dirname)

@@ -1,3 +1,4 @@
+const mongodb = require('mongodb')
 const jwt = require('jsonwebtoken')
 
 module.exports = (app, db) => {
@@ -15,7 +16,7 @@ module.exports = (app, db) => {
       res.sendStatus(401)
       return
     }
-    let user = await db.User.findOne({ _id: payload._id })
+    let user = await db.User.findOne({ _id: mongodb.ObjectID(payload._id) })
     if (!user) {
       res.sendStatus(401)
       return

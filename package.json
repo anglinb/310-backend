@@ -25,6 +25,7 @@
     "express-validator": "^4.2.0",
     "jsonwebtoken": "^8.0.1",
     "mongorito": "^3.0.4",
+    "mongorito-timestamps": "^1.0.1",
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.0",
     "require-dir": "^0.3.2",

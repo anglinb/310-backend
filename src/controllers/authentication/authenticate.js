@@ -24,6 +24,7 @@ module.exports = (router, app, db) => {
       let newUser = new db.User({ username: data.username })
       await newUser.setPassword(data.password)
       await newUser.save()
+      await newUser.createDefaultBudget()
       sendJWT(newUser, res)
     }
   })

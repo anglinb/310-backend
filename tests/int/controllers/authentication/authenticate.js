@@ -9,7 +9,7 @@ describe('[controller] authentication', () => {
     return conn.dropDatabase()
   })
   describe('without existing user', () => {
-    it('should create a new user', async () => {
+    it('should create a new user and a default budget', async () => {
       await request(app)
         .post('/authenticate')
         .send({ username: 'banglin@usc.edu', password: '12345' })
@@ -20,6 +20,9 @@ describe('[controller] authentication', () => {
       let user = await app.db.User.findOne({ username: 'banglin@usc.edu' })
       expect(user).not.to.be.a('null')
       expect(await user.checkPassword('12345')).to.eql(true)
+      let budgets = await user.budgets()
+      expect(budgets.length).to.eql(1)
+      expect(budgets[0].get('name')).to.eql('Personal Expenses')
     })
   })
 
