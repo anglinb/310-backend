@@ -16,18 +16,15 @@ module.exports = (router, app, db) => {
     if (user) {
       let success = await user.checkPassword(data.password)
       if (!success) {
-        res.status(401).json({ error: { msg: 'Invalid password' , error: 'invalid_password' } })
-        return;
+        res.status(401).json({ error: { msg: 'Invalid password', error: 'invalid_password' } })
       } else {
         sendJWT(user, res)
-        return
       }
     } else {
-      let newUser = new db.User({ username:data.username })
+      let newUser = new db.User({ username: data.username })
       await newUser.setPassword(data.password)
       await newUser.save()
       sendJWT(newUser, res)
-      return
     }
   })
 }

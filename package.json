@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "start:dev": "nodemon index.js",
+    "lint": "standard",
+    "lint:fix": "standard --fix",
     "test": "npm run lint && npm run test:int && npm run test:unit",
     "test:unit": "NODE_ENV=test mocha --recursive tests/unit/",
     "test:unit:watch": "NODE_ENV=test M mocha --watch --recursive tests/unit/",
@@ -32,6 +34,19 @@
     "chai": "^4.1.2",
     "mocha": "^3.5.3",
     "nodemon": "^1.12.1",
+    "standard": "^10.0.3",
     "supertest": "^3.0.0"
+  },
+  "standard": {
+    "globals": [
+      "describe",
+      "context",
+      "before",
+      "beforeEach",
+      "after",
+      "afterEach",
+      "it",
+      "expect"
+    ]
   }
 }

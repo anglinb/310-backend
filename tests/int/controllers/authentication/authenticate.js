@@ -1,4 +1,4 @@
-const request = require('supertest');
+const request = require('supertest')
 const expect = require('chai').expect
 const app = require('../../../../')
 const jwt = require('jsonwebtoken')
@@ -12,7 +12,7 @@ describe('[controller] authentication', () => {
     it('should create a new user', async () => {
       await request(app)
         .post('/authenticate')
-        .send({ username: 'banglin@usc.edu', password: '12345'})
+        .send({ username: 'banglin@usc.edu', password: '12345' })
         .expect(200)
         .expect(res => {
           expect(res.body.status).to.eql('ok')
@@ -24,7 +24,6 @@ describe('[controller] authentication', () => {
   })
 
   describe('with an existing user', () => {
-
     let user
     beforeEach(async () => {
       let conn = await app.db.mongo.connection()
@@ -37,7 +36,7 @@ describe('[controller] authentication', () => {
     it('should fail if the password is wrong already', async () => {
       await request(app)
         .post('/authenticate')
-        .send({ username: 'banglin@usc.edu', password: '54321'})
+        .send({ username: 'banglin@usc.edu', password: '54321' })
         .expect(401)
         .expect(res => {
           expect(Object.keys(res.body)).to.include('error')
@@ -47,7 +46,7 @@ describe('[controller] authentication', () => {
     it('should succeed if the password is correct', async () => {
       await request(app)
         .post('/authenticate')
-        .send({ username: 'banglin@usc.edu', password: '12345'})
+        .send({ username: 'banglin@usc.edu', password: '12345' })
         .expect(200)
         .expect(res => {
           expect(res.body.status).to.eql('ok')

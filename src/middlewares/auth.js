@@ -11,7 +11,7 @@ module.exports = (app, db) => {
     let payload
     try {
       payload = jwt.verify(token, process.env.JWT_SECRET)
-    } catch(err) {
+    } catch (err) {
       res.sendStatus(401)
       return
     }

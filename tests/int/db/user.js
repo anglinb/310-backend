@@ -16,9 +16,8 @@ describe('[model] User', () => {
       let success = await user.checkPassword('54321')
       expect(success).to.eql(false)
     })
-
   })
-  describe.only('budgets', () => {
+  describe('budgets', () => {
     it('should return budgets associated with the user', async () => {
       let user = new app.db.User({})
       await user.save()

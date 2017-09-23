@@ -5,5 +5,3 @@ module.exports = (app, db) => {
   app.use('/', home(app, db))
   app.use('/', authentication(app, db))
 }
-
-

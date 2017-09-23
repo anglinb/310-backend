@@ -1,4 +1,4 @@
-const request = require('supertest');
+const request = require('supertest')
 const expect = require('chai').expect
 const app = require('../../../../')
 
@@ -13,4 +13,3 @@ describe('[controller] home', () => {
       })
   })
 })
-
