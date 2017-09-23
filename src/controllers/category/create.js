@@ -1,15 +1,12 @@
 const validate = require('express-validation')
 const categoryCreateValidation = require('../../validators/category/create')
-const VALID_KEYS = [
-  'name'
-]
 
 module.exports = (router, app, db) => {
   router.post('/',
     validate(categoryCreateValidation),
     async (req, res, next) => {
       let slug = db.Category.createSlug(req.body.name)
-      let categories = req.budget.get('categories')
+      let categories = req.budget.get('categories') || []
       let duplicates = categories.filter((value) => {
         if (value.get('slug') === slug) {
           return true
@@ -17,7 +14,8 @@ module.exports = (router, app, db) => {
         return false
       })
       if (duplicates.length > 0) {
-        res.send(400).json({'error': 'Category already exists'})
+        res.sendStatus(400)
+        return
       }
       let newCategory = new db.Category({ slug, name: req.body.name, amount: req.body.amount })
       categories.push(newCategory)

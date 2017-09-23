@@ -1,10 +1,17 @@
+const Router = require('express').Router
 const controllers = require('require-dir')()
 
 module.exports = (app, db) => {
-  const router = require('express').Router()
+  const listCreateRouter = Router()
+  controllers['create'](listCreateRouter, app, db)
+
+  const showUpdateRouter = Router()
   Object.keys(controllers).map((key) => {
-    controllers[key](router, app, db)
+    if (key !== 'create') {
+      console.log('registering key', key)
+      controllers[key](showUpdateRouter, app, db)
+    }
   })
-  return router
+  return { showUpdateRouter, listCreateRouter }
 }
 module.exports.controllers = controllers
