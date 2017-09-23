@@ -2,6 +2,7 @@
 const fs = require('fs')
 const path = require('path');
 const { Database, Model } = require('mongorito')
+const plugins = require('./plugins')
 
 const basename  = path.basename(module.filename);
 var exp = {}
@@ -11,7 +12,7 @@ const db = new Database(process.env.MONGO_DB_URL || 'localhost/sanity')
 exp.mongo = db
 
 fs.readdirSync(__dirname)
-  .filter(function(file) {
+  .filter((file) =>  {
     return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
   })
   .forEach(function(file) {
@@ -20,5 +21,7 @@ fs.readdirSync(__dirname)
     db.register(model)
     exp[model.name] = model
   });
+
+plugins(exp) // Registers all the plugins
 
 module.exports = exp

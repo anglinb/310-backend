@@ -1,6 +1,10 @@
-const actions = require('require-dir')()
-const router = require('express').Router()
+const controllers = require('require-dir')()
 
 module.exports = (app, db) => {
-  actions.authenticate(router, app, db)
+  const router = require('express').Router()
+  Object.keys(controllers).map((key) => {
+    controllers[key](router, app, db)
+  })
+  return router
 }
+module.exports.controllers = controllers

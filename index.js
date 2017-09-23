@@ -1,15 +1,19 @@
+const fs = require('fs')
+const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 const routes = require('./src/routes')
 const auth = require('./src/middlewares/auth')
 
+if (fs.existsSync(path.join(__dirname, '.env'))) {
+  require('dotenv').config()
+}
 
 const app = express()
 const db = require('./src/db')
 db.mongo.connect()
 
 app.use(bodyParser.json())
-app.use(auth(app, db))
 routes(app, db)
 
 if (typeof require != 'undefined' && require.main==module) {
