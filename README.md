@@ -1,6 +1,8 @@
 Santiy Backend
 ===
 
+![Travis](https://api.travis-ci.com/anglinb/310-backend.svg?token=65ADET4Jhdo2MDRszyYy&branch=master)
+
 This is an [express](https://expressjs.com/) app that powers the sanity app. The provided endpoints are mostly RESTful w/ a few execptions. The backing store is a standard mongodb process.
 
 ### Getting Started
