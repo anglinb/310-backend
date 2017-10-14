@@ -15,6 +15,10 @@ db.mongo.connect()
 app.use(bodyParser.json())
 routes(app, db)
 
+app.use(function(err, req, res, next){
+  res.status(400).json(err);
+});
+
 if (typeof require !== 'undefined' && require.main === module) {
   const port = process.env.PORT || 3000
   console.log('Listening on port ' + port)
