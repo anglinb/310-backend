@@ -2,7 +2,9 @@ const validate = require('express-validation')
 const budgetUpdateValidation = require('../../validators/budget/update')
 
 const VALID_KEYS = [
-  'name'
+  'name',
+  'resetType',
+  'resetDate',
 ]
 
 module.exports = (router, app, db) => {

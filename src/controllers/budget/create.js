@@ -1,7 +1,9 @@
 const validate = require('express-validation')
 const budgetCreateValidation = require('../../validators/budget/create')
 const VALID_KEYS = [
-  'name'
+  'name',
+  'resetType',
+  'resetDate',
 ]
 
 module.exports = (router, app, db) => {
@@ -15,7 +17,8 @@ module.exports = (router, app, db) => {
         obj[key] = req.body[key]
         return obj
       }),
-      { owner_id: req.user.get('_id') }
+      { owner_id: req.user.get('_id') },
+      { categories: [] },
     ))
       await budget.save()
       res.json(budget.toJSON())
