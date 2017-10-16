@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const express = require('express')
+const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const routes = require('./src/routes')
 
@@ -11,6 +12,8 @@ if (fs.existsSync(path.join(__dirname, '.env'))) {
 const app = express()
 const db = require('./src/db')
 db.mongo.connect()
+
+app.use(morgan(':method :url :status :remote-addr :res[content-length] - :response-time ms'))
 
 app.use(bodyParser.json())
 routes(app, db)
