@@ -11,7 +11,11 @@ describe('[controller] budget', () => {
     })
     describe('create', () => {
       it('should create the budget', async () => {
-        let budgetReq = { name: 'Budget 1' }
+        let budgetReq = {
+          name: 'Budget 1',
+          resetDate: 5,
+          resetType: 'MONTH'
+        }
         let user = await testHelpers(app, app.db).createUser()
         await request(app)
           .post('/budgets')

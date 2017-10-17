@@ -9,7 +9,10 @@ module.exports = (db) => {
     Model.prototype.createDefaultBudget = async function () {
       let budget = new db.Budget({
         owner_id: this.get('_id'),
-        name: 'Personal Expenses'
+        name: 'Personal Expenses',
+        categories: [],
+        resetDate: new Date().getDate() + 1,
+        resetType: 'MONTH',
       })
       return budget.save()
     }

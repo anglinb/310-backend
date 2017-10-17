@@ -23,6 +23,9 @@ describe('[controller] authentication', () => {
       let budgets = await user.budgets()
       expect(budgets.length).to.eql(1)
       expect(budgets[0].get('name')).to.eql('Personal Expenses')
+      expect(budgets[0].get('categories')).to.eql([])
+      expect(budgets[0].get('resetDate')).to.be.a('number')
+      expect(budgets[0].get('resetType')).to.eql('MONTH')
     })
   })
 
