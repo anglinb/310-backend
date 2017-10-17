@@ -1,5 +1,6 @@
 const validate = require('express-validation')
 const transcationCreateValidation = require('../../validators/transaction/create')
+const uuidv4 = require('uuid/v4');
 const VALID_KEYS = [
   'name',
   'amount',
@@ -19,7 +20,7 @@ module.exports = (router, app, db) => {
         let obj = {}
         obj[key] = req.body[key]
         return obj
-      })
+      }), {"_id":uuidv4()},{"timestamp": new Date().toUTCString()}
     ))
 
     let transactions = req.category.get('transactions') || []
@@ -28,10 +29,7 @@ module.exports = (router, app, db) => {
 
 
     transactions.push(transaction)
-    console.log("hello")
-    console.log(transactions.length)
     req.category.set('transactions',transactions)
-    console.log(req.category.get('transactions').length)
     categories[req.categoryIndex] = req.category
     req.budget.set('categories', categories)
 

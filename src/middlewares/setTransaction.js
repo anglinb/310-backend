@@ -1,9 +1,12 @@
 module.exports = (app, db) => {
   return (req, res, next) => {
     let transactions = req.category.get('transactions') || []
-    let targetIndex = categories.findIndex((value) => {
+    console.log(req.params.transactionId)
+    let targetIndex = transactions.findIndex((value) => {
       return req.params.transactionId === value.get('_id')
     })
+    console.log("target index found")
+    console.log(targetIndex)
     if (targetIndex === -1) {
       res.sendStatus(404)
       return
