@@ -20,7 +20,7 @@ module.exports = (router, app, db) => {
         let obj = {}
         obj[key] = req.body[key]
         return obj
-      }), {"_id":uuidv4()},{"timestamp": new Date().toUTCString()}
+      }), {"_id":uuidv4()},{"timestamp": new Date()}
     ))
 
     let transactions = req.category.get('transactions') || []
