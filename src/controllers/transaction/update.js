@@ -10,7 +10,7 @@ const VALID_KEYS = [
 
 module.exports = (router, app, db) => {
   router.put('/',
-    validate(transactionUpdateValidation),
+    validate(transcationUpdateValidation),
     async (req, res, next) => {
       let transactions = req.category.get('transactions') || []
       VALID_KEYS.forEach((key) => {

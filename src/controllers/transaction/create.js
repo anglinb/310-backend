@@ -12,6 +12,7 @@ module.exports = (router, app, db) => {
   router.post('/',
     validate(transcationCreateValidation),
     async (req, res, next) => {
+
       let transaction = new db.Transaction(Object.assign(
       {},
       ...VALID_KEYS.map((key) => {
@@ -20,7 +21,21 @@ module.exports = (router, app, db) => {
         return obj
       })
     ))
-      await transaction.save()
-      res.json(transaction.toJSON())
+
+    let transactions = req.category.get('transactions') || []
+    let categories = req.budget.get('categories') || []
+
+
+
+    transactions.push(transaction)
+    console.log("hello")
+    console.log(transactions.length)
+    req.category.set('transactions',transactions)
+    console.log(req.category.get('transactions').length)
+    categories[req.categoryIndex] = req.category
+    req.budget.set('categories', categories)
+
+    await req.budget.save()
+    res.json(transaction.toJSON())
     })
 }
