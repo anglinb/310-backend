@@ -17,7 +17,7 @@ module.exports = (router, app, db) => {
         res.sendStatus(400)
         return
       }
-      let newCategory = new db.Category({ slug, name: req.body.name, amount: req.body.amount })
+      let newCategory = new db.Category({ slug, transactions: [], name: req.body.name, amount: req.body.amount })
       categories.push(newCategory)
       req.budget.set('categories', categories)
       await req.budget.save()
