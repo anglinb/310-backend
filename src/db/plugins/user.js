@@ -1,4 +1,5 @@
 const mongodb = require('mongodb')
+const categoryDefaults = require('../../helpers/defaults')
 
 module.exports = (db) => {
   db.User.use((Model) => {
@@ -7,13 +8,15 @@ module.exports = (db) => {
     }
 
     Model.prototype.createDefaultBudget = async function () {
-      let budget = new db.Budget({
-        owner_id: this.get('_id'),
-        name: 'Personal Expenses',
-        categories: [],
-        resetDate: new Date().getDate() + 1,
-        resetType: 'MONTH'
-      })
+      let budget = new db.Budget(Object.assign({},
+        {
+          owner_id: this.get('_id'),
+          name: 'Personal Expenses',
+          resetDate: new Date().getDate() + 1,
+          resetType: 'MONTH'
+         },
+        categoryDefaults
+      ))
       return budget.save()
     }
 

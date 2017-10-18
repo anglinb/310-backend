@@ -6,21 +6,23 @@ const VALID_KEYS = [
   'resetType',
   'resetDate'
 ]
+const categoryDefaults = require('../../helpers/defaults')
 
 module.exports = (router, app, db) => {
   router.post('/',
     validate(budgetCreateValidation),
     async (req, res, next) => {
       let budget = new db.Budget(Object.assign(
-      {},
-      ...VALID_KEYS.map((key) => {
-        let obj = {}
-        obj[key] = req.body[key]
-        return obj
-      }),
-      { owner_id: req.user.get('_id') },
-      { categories: [], lastArchivalDate: moment.unix(0).toDate() }
-    ))
+        {},
+        ...VALID_KEYS.map((key) => {
+          let obj = {}
+          obj[key] = req.body[key]
+          return obj
+        }),
+        { owner_id: req.user.get('_id') },
+        categoryDefaults,
+        { lastArchivalDate: moment.unix(0).toDate() }
+      ))
       await budget.save()
       res.json(budget.toJSON())
     })

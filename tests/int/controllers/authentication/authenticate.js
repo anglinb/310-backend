@@ -23,7 +23,7 @@ describe('[controller] authentication', () => {
       let budgets = await user.budgets()
       expect(budgets.length).to.eql(1)
       expect(budgets[0].get('name')).to.eql('Personal Expenses')
-      expect(budgets[0].get('categories')).to.eql([])
+      expect(budgets[0].get('categories').length).to.eql(3) // default categories
       expect(budgets[0].get('resetDate')).to.be.a('number')
       expect(budgets[0].get('resetType')).to.eql('MONTH')
     })
@@ -62,7 +62,7 @@ describe('[controller] authentication', () => {
     })
   })
 
-  describe.only('reset', async () => {
+  describe('reset', async () => {
     let user
     beforeEach(async () => {
       let conn = await app.db.mongo.connection()

@@ -35,13 +35,14 @@ describe('[model] User', () => {
   })
 
   describe('createDefaultBudget', () => {
-    it('should create a default budget', async () => {
+    it('should create a default budget w/ default categories', async () => {
       let user = new app.db.User({})
       await user.save()
       await user.createDefaultBudget()
       let budgets = await user.budgets()
       expect(budgets.length).to.eql(1)
       expect(budgets[0].get('name')).to.eql('Personal Expenses')
+      expect(budgets[0].get('categories').length).to.eql(3)
     })
   })
 
