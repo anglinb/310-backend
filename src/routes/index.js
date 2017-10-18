@@ -3,10 +3,12 @@ const authentication = require('../controllers/authentication')
 const budget = require('../controllers/budget')
 const category = require('../controllers/category')
 const transaction = require('../controllers/transaction')
+const archive = require('../controllers/archive')
 const autenticationMiddlewareFactory = require('../middlewares/auth')
 const setBudgetMiddlewareFactory = require('../middlewares/setBudget')
 const setCategoryMiddlewareFactory = require('../middlewares/setCategory')
 const setTransactionMiddlewareFactory = require('../middlewares/setTransaction')
+
 module.exports = (app, db) => {
   let autenticationMiddleware = autenticationMiddlewareFactory(app, db)
   let setBudgetMiddleware = setBudgetMiddlewareFactory(app, db)
@@ -24,6 +26,12 @@ module.exports = (app, db) => {
     autenticationMiddleware,
     setBudgetMiddleware,
     budgetController.showUpdateRouter)
+
+  const archiveController = archive(app, db)
+  app.use('/budgets/:budgetId/archives',
+    autenticationMiddleware,
+    setBudgetMiddleware,
+    archiveController.listCreateRouter)
 
   const categoryController = category(app, db)
   app.use('/budgets/:budgetId/categories',

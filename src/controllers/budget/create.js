@@ -1,3 +1,4 @@
+const moment = require('moment')
 const validate = require('express-validation')
 const budgetCreateValidation = require('../../validators/budget/create')
 const VALID_KEYS = [
@@ -18,7 +19,7 @@ module.exports = (router, app, db) => {
         return obj
       }),
       { owner_id: req.user.get('_id') },
-      { categories: [] },
+      { categories: [], lastArchivalDate: moment.unix(0).toDate() },
     ))
       await budget.save()
       res.json(budget.toJSON())
