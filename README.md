@@ -9,6 +9,8 @@ This is an [express](https://expressjs.com/) app that powers the sanity app. The
 
 To get started, make sure you have Node `>= 7.6` installed to handle the `async/await` syntax and make sure you have `mongodb` running on the standard port.
 
+*Note* You will have to modify you `.env` file before all of the server functionality will work. 
+
 ```
 git clone git@github.com:anglinb/310-backend.git
 cd 310-backend
@@ -18,6 +20,24 @@ npm run start:dev
 
 This will spin up the server locally, running on port 3000 by default. Additionally, `nodemon` will restart the server every time a file changes. 
 
+*Note*: As mentioned above, you will need to run mongodb in the background. The easiest way to get it is to run `brew install mongodb` and then `brew services start mongodb`. 
+
+### Configuration
+
+All the the deployment-specific configuration for the backend stored in a `.env` file in the root directory. The `.env` is written in a standard bash syntax and all the variables in the file get injected into the Node process as enviornment variables. The application can then access these variables through calling `process.env.VARIABLE_NAME`. A sample of this file is provided in `.env-example`. The list below specifies the necessary keys and how to find/set them. 
+
+```
+JWT_SECRET="dev" # This is the secret that teh JWTs are signed with. Make sure this has sufficient entropy and share it with no one.
+
+SENDER_EMAIL="banglin@usc.edu" # This is the "from" address for all email notifications and password resets. This will have to be veriftied before use in the AWS Ses console.
+
+
+# Note: The AWS IAM role _must_ have `AmazonSESFullAccess` policy attached to it
+AWS_ACCESS_KEY_ID="ABCDEFHIJKLMNOQRSTAA"  # This is the AWS Key Id.
+AWS_SECRET_ACCESS_KEY="fdslewwiojo209fo3ih03hh832ljf3l" # This is the AWS secret
+AWS_DEFAULT_REGION="us-east-1" # This is the AWS region where the emails will be sent from
+
+```
 
 ### File Structure
 
