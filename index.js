@@ -18,9 +18,9 @@ app.use(morgan(':method :url :status :remote-addr :res[content-length] - :respon
 app.use(bodyParser.json())
 routes(app, db)
 
-app.use(function(err, req, res, next){
-  res.status(400).json(err);
-});
+app.use(function (err, req, res, next) {
+  res.status(400).json(err)
+})
 
 if (typeof require !== 'undefined' && require.main === module) {
   const port = process.env.PORT || 3000

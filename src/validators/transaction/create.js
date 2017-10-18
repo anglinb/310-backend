@@ -6,6 +6,6 @@ module.exports = {
     amount: Joi.number().required(),
     description: Joi.string().required(),
     recurring: Joi.boolean().required(),
-    recurring_days: Joi.number().integer(),
+    recurring_days: Joi.number().integer()
   }
 }

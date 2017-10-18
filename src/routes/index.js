@@ -45,13 +45,13 @@ module.exports = (app, db) => {
     setCategoryMiddleware,
     categoryController.showUpdateRouter)
 
-    const transactionController = transaction(app, db)
-    app.use('/budgets/:budgetId/categories/:categorySlug/transactions/:transactionId',
+  const transactionController = transaction(app, db)
+  app.use('/budgets/:budgetId/categories/:categorySlug/transactions/:transactionId',
       autenticationMiddleware,
       setBudgetMiddleware,
       setCategoryMiddleware, setTransactionMiddleware,
       transactionController.showUpdateRouter)
-      app.use('/budgets/:budgetId/categories/:categorySlug/transactions',
+  app.use('/budgets/:budgetId/categories/:categorySlug/transactions',
         autenticationMiddleware,
         setBudgetMiddleware,
         setCategoryMiddleware,

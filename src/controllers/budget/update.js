@@ -4,7 +4,7 @@ const budgetUpdateValidation = require('../../validators/budget/update')
 const VALID_KEYS = [
   'name',
   'resetType',
-  'resetDate',
+  'resetDate'
 ]
 
 module.exports = (router, app, db) => {

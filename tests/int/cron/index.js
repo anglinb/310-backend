@@ -4,18 +4,17 @@ const cronFactory = require('../../../src/cron')
 
 const expect = require('chai').expect
 
-
 describe('cron', () => {
-  let cronCls  
+  let CronCls
   beforeEach(async () => {
     let conn = await app.db.mongo.connection()
     await conn.dropDatabase()
-    cronCls = cronFactory(app, app.db)
+    CronCls = cronFactory(app, app.db)
   })
-  
+
   describe('archival', () => {
     it('should find relevant budgets', async () => {
-      let cron = new cronCls({ currentDate: moment('2017-10-05T18:40:47-07:00') }) 
+      let cron = new CronCls({ currentDate: moment('2017-10-05T18:40:47-07:00') })
 
       let budget1 = new app.db.Budget({
         name: 'Budget 1',
@@ -23,16 +22,16 @@ describe('cron', () => {
         resetType: 'MONTH',
         categories: [
           {
-            name: "Food",
-            slug: "food",
+            name: 'Food',
+            slug: 'food',
             transactions: [
               {
-                name: "Pizza",
+                name: 'Pizza',
                 amount: 20,
-                description: "I love pizza",
+                description: 'I love pizza',
                 recurring: false,
-                _id: "327e4520-f5c6-4524-9686-15eafce29a8a",
-                timestamp: "2017-10-17T05:00:01.628Z"
+                _id: '327e4520-f5c6-4524-9686-15eafce29a8a',
+                timestamp: '2017-10-17T05:00:01.628Z'
               }
             ],
             amount: 30
@@ -48,27 +47,27 @@ describe('cron', () => {
         resetType: 'MONTH',
         categories: [
           {
-            "name": "Food",
-            "slug": "food",
-            "transactions": [
+            'name': 'Food',
+            'slug': 'food',
+            'transactions': [
               {
-                "name": "Pizza (2)",
-                "amount": 20,
-                "description": "I love pizza (2)",
-                "recurring": false,
-                "_id": "327e4520-f5c6-4524-9686-15eafce29a8a",
-                "timestamp": "2017-10-17T05:00:01.628Z"
+                'name': 'Pizza (2)',
+                'amount': 20,
+                'description': 'I love pizza (2)',
+                'recurring': false,
+                '_id': '327e4520-f5c6-4524-9686-15eafce29a8a',
+                'timestamp': '2017-10-17T05:00:01.628Z'
               }
             ],
-            "amount": 40
+            'amount': 40
           }
         ],
         lastArchivalDate: moment('2017-09-05T18:40:47-07:00')
       })
       await budget2.save()
 
-      let budgets = await cron.archiveBudgets()
-      let archives = await app.db.BudgetArchive.find({ budget_id: budget1.get('_id')})
+      await cron.archiveBudgets()
+      let archives = await app.db.BudgetArchive.find({ budget_id: budget1.get('_id') })
       expect(archives.length).to.eql(1)
 
       // This is so it's easier to get at the properties

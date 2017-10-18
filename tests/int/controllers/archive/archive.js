@@ -14,7 +14,7 @@ describe('[controller] archive', () => {
         owner_id: user.user.get('_id'),
         resetDate: 5,
         resetType: 'MONTH',
-        categories: [],
+        categories: []
       })
       await budget.save()
     })
@@ -32,10 +32,8 @@ describe('[controller] archive', () => {
 
     describe('with budgets', () => {
       it('should the budgets sorted by created date', async () => {
-
         let budgetArchive1 = new app.db.BudgetArchive({ name: 'Budget 1', owner_id: user.user.get('_id'), budget_id: budget.get('_id') })
         await budgetArchive1.save()
-
 
         let secondBudget = new app.db.Budget()
         await secondBudget.save()
