@@ -7,7 +7,7 @@ module.exports = (db) => {
     }
 
     Model.prototype.createDefaultBudget = async function () {
-      let budget = new db.BudgetArchive({
+      let budget = new db.Budget({
         owner_id: this.get('_id'),
         name: 'Personal Expenses',
         categories: [],

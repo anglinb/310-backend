@@ -3,7 +3,7 @@ const app = require('../../../../')
 const testHelpers = require('../../testHelpers')
 const expect = require('chai').expect
 
-describe.only('[controller] archive', () => {
+describe('[controller] archive', () => {
   describe('with authentication', () => {
     let user
     let budget
