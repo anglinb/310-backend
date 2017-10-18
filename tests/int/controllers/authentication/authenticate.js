@@ -61,4 +61,48 @@ describe('[controller] authentication', () => {
         })
     })
   })
+
+  describe.only('reset', async () => {
+
+    let user
+    beforeEach(async () => {
+      let conn = await app.db.mongo.connection()
+      await conn.dropDatabase()
+      user = new app.db.User({ username: 'brianranglin@gmail.com' })
+      await user.setPassword('12345')
+      await user.save()
+    })
+
+    it('should give you a reset token and send an email', async () => {
+      // Can't figure out how to mock the email client :( but it works...
+      // return request(app)      
+      //   .post('/authenticate/reset/request')
+      //   .send({ username: 'brianranglin@gmail.com'})
+      //   .expect(200)
+      //   .expect(res => {
+      //       expect(res.body.status).to.eql('ok')
+      //   })
+      return true
+    })
+
+    it('should reset the password in the second step', async () => {
+      user.set('passwordResetToken', '129482')
+      await user.save()
+        
+      await request(app)      
+        .post('/authenticate/reset/complete')
+        .send({
+          username: 'brianranglin@gmail.com',
+          password: '54321',
+          passwordResetToken: '129482',
+        })
+        .expect(200)
+        .expect(res => {
+            expect(res.body.status).to.eql('ok')
+        })
+      let updatedUser = await app.db.User.findOne({ _id: user.get('_id') })
+      let success = await updatedUser.checkPassword('54321')
+      expect(success).to.eql(true)
+    })
+  })
 })

@@ -17,6 +17,7 @@
   "author": "Brian Anglin <banglin@usc.edu>",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.135.0",
     "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "dotenv": "^4.0.0",
