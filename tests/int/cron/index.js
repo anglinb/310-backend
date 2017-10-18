@@ -80,4 +80,8 @@ describe('cron', () => {
       expect(updatedBudget1Done.lastArchivalDate).to.eql(cron.currentDate.toDate())
     })
   })
+
+  describe('sendNotifications', () => {
+
+  })
 })

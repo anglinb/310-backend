@@ -1,6 +1,8 @@
 const moment = require('moment')
+const notifications = require('./notifications')
 
 module.exports = (app, db) => {
+
   const cron = class Cron {
     constructor ({ currentDate = moment() }) {
       this.currentDate = currentDate
@@ -12,7 +14,8 @@ module.exports = (app, db) => {
     }
 
     async sendNotifications() {
-
+      let notifications = notifications.Notifications({ currentDate: this.currentDate })
+      return notifications.sendNotifications()
     }
 
     async archiveBudgets () {
