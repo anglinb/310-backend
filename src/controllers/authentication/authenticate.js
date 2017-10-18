@@ -21,7 +21,10 @@ module.exports = (router, app, db) => {
   router.post('/authenticate',
   validate(authenticationValidation),
   async (req, res, next) => {
-    const data = { username: req.body.username, password: req.body.password }
+    const data = { 
+      username: req.body.username,
+      password: req.body.password
+    }
     let user = await db.User.findOne({ username: data.username })
     if (user) {
       let success = await user.checkPassword(data.password)
@@ -31,7 +34,13 @@ module.exports = (router, app, db) => {
         sendJWT(user, res)
       }
     } else {
-      let newUser = new db.User({ username: data.username })
+      let newUser = new db.User({
+        username: data.username,
+        notifications: {
+          frequency: 'DAILY',
+          thresholds: [50, 80],
+        }
+      })
       await newUser.setPassword(data.password)
       await newUser.save()
       await newUser.createDefaultBudget()

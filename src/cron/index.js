@@ -6,6 +6,15 @@ module.exports = (app, db) => {
       this.currentDate = currentDate
     }
 
+    async run() {
+      await this.archiveBudgets()
+      return this.sendNotifications()
+    }
+
+    async sendNotifications() {
+
+    }
+
     async archiveBudgets () {
       // TODO: Deal with month
       let resetDate = this.currentDate.date()

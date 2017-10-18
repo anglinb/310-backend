@@ -4,6 +4,8 @@ const budget = require('../controllers/budget')
 const category = require('../controllers/category')
 const transaction = require('../controllers/transaction')
 const archive = require('../controllers/archive')
+const selfCtrl = require('../controllers/self')
+
 const autenticationMiddlewareFactory = require('../middlewares/auth')
 const setBudgetMiddlewareFactory = require('../middlewares/setBudget')
 const setCategoryMiddlewareFactory = require('../middlewares/setCategory')
@@ -26,6 +28,11 @@ module.exports = (app, db) => {
     autenticationMiddleware,
     setBudgetMiddleware,
     budgetController.showUpdateRouter)
+
+  const selfController = selfCtrl(app, db)
+  app.use('/self',
+    autenticationMiddleware,
+    selfController)
 
   const archiveController = archive(app, db)
   app.use('/budgets/:budgetId/archives',
