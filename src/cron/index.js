@@ -1,17 +1,23 @@
 const moment = require('moment')
 const notifications = require('./notifications')
 
-module.exports = (app, db) => {
 
   class Cron {
-    constructor(props) {
-      
+
+    static build({currentDate = moment(), db}) {
+      return new Cron({currentDate, db})
+    }
+    
+    constructor({currentDate, db}) {
+      this.db = db 
       this.currentDate = currentDate
       this.archiveBudgets = this.archiveBudgets.bind(this)
     }
 
     async run() {
+      console.log('Archiving budgets!')
       await this.archiveBudgets()
+      console.log('Sending notifications!')
       return this.sendNotifications()
     }
 
@@ -22,9 +28,8 @@ module.exports = (app, db) => {
 
     async archiveBudgets () {
       // TODO: Deal with month
-       console.log('FUCK E', this.currentDate)
       let resetDate = this.currentDate.date()
-      let budgets = await db.Budget.find({ resetDate: resetDate, resetType: 'MONTH' })
+      let budgets = await this.db.Budget.find({ resetDate: resetDate, resetType: 'MONTH' })
       for (var j = 0; j < budgets.length; j++) {
         let budget = budgets[j]
         let threshold = this.currentDate.clone()
@@ -34,7 +39,7 @@ module.exports = (app, db) => {
 
         if (!threshold.isBefore(lastArchivalDate)) {
           // If we haven't achieved in the last 5 days and today is the reset date, we should move to archieve
-          let budgetArchive = new db.BudgetArchive(
+          let budgetArchive = new this.db.BudgetArchive(
             {
               budget_id: budget.get('_id'),
               name: budget.get('name'),
@@ -64,5 +69,4 @@ module.exports = (app, db) => {
       }
     }
   }
-  return Cron
-}
+module.exports = Cron
