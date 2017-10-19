@@ -38,6 +38,15 @@ AWS_SECRET_ACCESS_KEY="fdslewwiojo209fo3ih03hh832ljf3l" # This is the AWS secret
 AWS_DEFAULT_REGION="us-east-1" # This is the AWS region where the emails will be sent from
 
 ```
+### Other Requirements
+
+To handle delayed notification sending and budget archival, the project requires a cron job to be called 3 times a day at a regular interval. The cron is invoked as follows:
+
+```
+node cron.js
+```
+
+Most unix systems provide a mechanism to trigger this script on a regular interval. This can be accomplished by running the `crontab -e` command and following the instructions to create the appropriate entries.
 
 ### File Structure
 

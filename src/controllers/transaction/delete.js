@@ -8,6 +8,6 @@ module.exports = (router, app, db) => {
     categories[req.categoryIndex] = req.category
     req.budget.set('categories', categories)
     await req.budget.save()
-    res.sendStatus(204)
+    res.json({})
   })
 }

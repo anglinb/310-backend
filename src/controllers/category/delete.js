@@ -4,6 +4,6 @@ module.exports = (router, app, db) => {
     categories.splice(req.categoryIndex, 1)
     req.budget.set('categories', categories)
     await req.budget.save()
-    res.sendStatus(204)
+    res.json({})
   })
 }
