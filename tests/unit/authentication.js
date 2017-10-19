@@ -7,7 +7,7 @@ const sinon = require('sinon')
 const expect = require('chai').expect
 
 describe('[misc] authentication', () => {
-  describe.only('middleware', () => {
+  describe('middleware', () => {
     it('should return 401 on no token', async () => {
       let middleware = authMiddleware(app, app.db)
       let req = { headers: {} }

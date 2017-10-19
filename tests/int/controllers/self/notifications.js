@@ -3,7 +3,7 @@ const expect = require('chai').expect
 const testHelpers = require('../../testHelpers')
 const app = require('../../../../')
 
-describe.only('[controller] self notifications', () => {
+describe('[controller] self notifications', () => {
 
     let user
     beforeEach(async () => {
