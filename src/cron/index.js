@@ -3,9 +3,11 @@ const notifications = require('./notifications')
 
 module.exports = (app, db) => {
 
-  const cron = class Cron {
-    constructor ({ currentDate = moment() }) {
+  class Cron {
+    constructor(props) {
+      
       this.currentDate = currentDate
+      this.archiveBudgets = this.archiveBudgets.bind(this)
     }
 
     async run() {
@@ -20,6 +22,7 @@ module.exports = (app, db) => {
 
     async archiveBudgets () {
       // TODO: Deal with month
+       console.log('FUCK E', this.currentDate)
       let resetDate = this.currentDate.date()
       let budgets = await db.Budget.find({ resetDate: resetDate, resetType: 'MONTH' })
       for (var j = 0; j < budgets.length; j++) {
@@ -61,5 +64,5 @@ module.exports = (app, db) => {
       }
     }
   }
-  return cron
+  return Cron
 }

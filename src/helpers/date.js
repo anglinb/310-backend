@@ -1,10 +1,11 @@
 const moment = require('moment')
 
-export default class DateHelper {
+class DateHelper {
 
   constructor({currentDate = moment(), resetDate, resetType}) {
     this.currentDate = currentDate
     this.resetDate  = resetDate
+    this.resetType  = resetType
   }
 
   nextResetDate() {
@@ -61,3 +62,5 @@ export default class DateHelper {
     return nextResetDate.clone().subtract(7, 'days')
   }
 }
+
+module.exports = DateHelper
