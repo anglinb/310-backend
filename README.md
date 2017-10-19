@@ -40,6 +40,7 @@ AWS_DEFAULT_REGION="us-east-1" # This is the AWS region where the emails will be
 ```
 ### Other Requirements
 
+#### Cron Job
 To handle delayed notification sending and budget archival, the project requires a cron job to be called 3 times a day at a regular interval. The cron is invoked as follows:
 
 ```
@@ -47,6 +48,10 @@ node cron.js
 ```
 
 Most unix systems provide a mechanism to trigger this script on a regular interval. This can be accomplished by running the `crontab -e` command and following the instructions to create the appropriate entries.
+#### AWS SES
+
+We are using Amazon Simple Email Service (SES) for our transactional email. We send password reset emails and budget notifications through their service. To use these features [you will have  to register for an AWS account and verify at least one email](http://docs.aws.amazon.com/ses/latest/DeveloperGuide/quick-start.html). Our team has an account but we were unsure about sharing the AWS tokens. Please contact banglin@usc.edu for details.
+
 
 ### File Structure
 
