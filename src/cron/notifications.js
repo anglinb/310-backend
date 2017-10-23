@@ -1,6 +1,6 @@
 const moment = require('moment')
-const DateHelper = require('../helpers/date');
-const EmailSender = require('../helpers/email');
+const DateHelper = require('../helpers/date')
+const EmailSender = require('../helpers/email')
 
 let lastNotificationDateMutator = {
   DAILY: (currentDate) => {
@@ -14,35 +14,34 @@ let lastNotificationDateMutator = {
     return newDate
   },
   MONTHLY: (currentDate) => {
-    let newDae = currentDate.clone()
+    let newDate = currentDate.clone()
     newDate.subtract(1, 'month')
     return newDate
   },
   NEVER: (currentDate) => {
-    // Never will never be in the past :P 
-    let newDae = currentDate.clone()
+    // Never will never be in the past :P
+    let newDate = currentDate.clone()
     newDate.add(1, 'month')
     return newDate
   }
 }
 
 module.exports = (app, db) => {
-
   class UserNotifications {
-    constructor({ notifications = '', user = '' }) {
+    constructor ({ notifications = '', user = '' }) {
       this.notifications = notifications
       this.user = user
     }
 
-    async sendNotification(dryRun = false) {
+    async sendNotification (dryRun = false) {
       let notifications = await this.calculateNotifications()
 
       let messages = notifications.map((notification) => {
-        return `You are over the ${notification.category.metThreshold}% threshold in the ${notification.category.category.get('name')} category for budget ${notification.budget.get('name')}. There is $${notification.category.category.get('amount') - notification.category.spent} left in the budget and you have ${notification.category.daysLeft} days left in this budget period.` 
+        return `You are over the ${notification.category.metThreshold}% threshold in the ${notification.category.category.get('name')} category for budget ${notification.budget.get('name')}. There is $${notification.category.category.get('amount') - notification.category.spent} left in the budget and you have ${notification.category.daysLeft} days left in this budget period.`
       })
       let message = messages.join('\n\n')
       let htmlMessage = messages.join('<br /><br />')
-      // Allow a dry run to not actually send the email 
+      // Allow a dry run to not actually send the email
       if (dryRun) {
         return { message, htmlMessage }
       }
@@ -54,50 +53,49 @@ module.exports = (app, db) => {
           emailHTML: htmlMessage,
           emailSubject: `Sanity Budget Update | ${this.notifications.currentDate.format('M/D')}`
         }).send()
-      } catch (e)  {
-        console.log('WHOOPS! Email sending error', e) 
+      } catch (e) {
+        console.log('WHOOPS! Email sending error', e)
       }
       return { message, htmlMessage }
     }
 
-    async calculateNotifications()  {
-
+    async calculateNotifications () {
       if (!this.needsNotification()) {
-        return;
+        return
       }
 
-      this.thresholds =  this.calculateThresholds()
+      this.thresholds = this.calculateThresholds()
 
-      // Loop through all the budgets 
+      // Loop through all the budgets
       let budgets = await this.user.budgets()
-      let toSendNotifications =  budgets.map((budget) => {
+      let toSendNotifications = budgets.map((budget) => {
         let results = this.calculateForBudget(budget)
         return results.map((category) => {
-          return { category,  budget }
+          return { category, budget }
         })
       }).reduce((prev, arr) => {
-        return prev.concat(arr) 
+        return prev.concat(arr)
       }, [])
       return toSendNotifications
     }
 
-    async needsNotification() {
+    async needsNotification () {
       let notificationSettings = this.user.get('notifications')
-      let lastNotification = this.user.get('lastNotificationDate') ?  moment(this.user.get('lastNotificationDate')) : moment.unix(0)
+      let lastNotification = this.user.get('lastNotificationDate') ? moment(this.user.get('lastNotificationDate')) : moment.unix(0)
 
       // Take the last notification setting and subtract the appropriate amount
       let lastNotificationThreshold = lastNotificationDateMutator[notificationSettings.frequency](lastNotification)
-      if (lastNotificationThreshold.isBefore(this.notifications.currentDate) && notificationSettings.frequency !== 'NEVER')  {
+      if (lastNotificationThreshold.isBefore(this.notifications.currentDate) && notificationSettings.frequency !== 'NEVER') {
         return true
       }
       return false
     }
 
-    calculateForBudget(budget) {
+    calculateForBudget (budget) {
       let dateHelper = new DateHelper({
         currentDate: this.notifications.currentDate,
         resetDate: budget.get('resetDate'),
-        resetType: budget.get('resetType'),
+        resetType: budget.get('resetType')
       })
       return budget.get('categories').map((category) => {
         let ret = this.calculateForCategory(category, dateHelper)
@@ -114,15 +112,15 @@ module.exports = (app, db) => {
       })
     }
 
-    calculateForCategory(category, dateHelper) {
+    calculateForCategory (category, dateHelper) {
       // How much have you spent
       let spent = category.get('transactions').reduce((runningSum, transaction) => {
-        return  runningSum + transaction.get('amount')
+        return runningSum + transaction.get('amount')
       }, 0)
-      let percentage = (spent / category.get('amount')) * 100 
+      let percentage = (spent / category.get('amount')) * 100
 
       // What's the highest percentage threshold
-      let metThreshold = this.calculateThresholdHits(percentage) 
+      let metThreshold = this.calculateThresholdHits(percentage)
       if (!metThreshold) {
         return null
       }
@@ -133,13 +131,13 @@ module.exports = (app, db) => {
       return {
         metThreshold,
         category,
-        spent, 
+        spent,
         daysLeft
       }
     }
 
-    calculateThresholdHits(percentage) {
-      for(let i = 0; i < this.thresholds.length; i++) {
+    calculateThresholdHits (percentage) {
+      for (let i = 0; i < this.thresholds.length; i++) {
         let threshold = this.thresholds[i]
         if (threshold < percentage) {
           return threshold
@@ -148,22 +146,20 @@ module.exports = (app, db) => {
       return null
     }
 
-
-    calculateThresholds() {
-      let cpy = this.user.get('notifications').thresholds 
+    calculateThresholds () {
+      let cpy = this.user.get('notifications').thresholds
       return cpy.sort((a, b) => {
         return a < b
       })
     }
-
   }
 
   class Notifications {
-    constructor({ currentDate = moment() }) {
-      this.currentDate = currentDate      
+    constructor ({ currentDate = moment() }) {
+      this.currentDate = currentDate
     }
 
-    async run() {
+    async run () {
       let users = await db.User.find({})
       users.forEach(async (user) => {
         return new UserNotifications({ notifications: this, user }).sendNotification()

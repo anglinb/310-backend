@@ -39,7 +39,7 @@ describe('[controller] budget', () => {
         await request(app)
           .delete('/budgets/' + budget.get('_id').toString())
           .set(...user.auth)
-          .expect(204)
+          .expect(200)
         let updatedBudget = await app.db.Budget.findOne({
           _id: budget.get('_id')
         })

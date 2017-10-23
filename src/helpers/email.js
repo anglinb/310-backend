@@ -1,8 +1,7 @@
 const aws = require('aws-sdk')
 
-
 class EmailSender {
-  constructor({ toEmail, emailText, emailHTML, emailSubject }) {
+  constructor ({ toEmail, emailText, emailHTML, emailSubject }) {
     this.toEmail = toEmail
     this.emailText = emailText
     this.emailHTML = emailHTML || emailText
@@ -16,7 +15,7 @@ class EmailSender {
     })
   }
 
-  async send() {
+  async send () {
     var params = {
       Destination: {
         CcAddresses: [
@@ -31,7 +30,7 @@ class EmailSender {
         Body: {
           Html: {
             Charset: 'UTF-8',
-            Data: this.emailText 
+            Data: this.emailText
           },
           Text: {
             Charset: 'UTF-8',
@@ -48,20 +47,20 @@ class EmailSender {
     if (process.env.NODE_ENV === 'test') {
       console.log('Refusing to send email in test... ', this.toEmail, this.emailText, this.emailHTML, this.emailSubject)
       return new Promise((resolve, reject) => {
-        resolve({ 
-            ResponseMetadata: { 
-              RequestId: 'c9c2b3a9-b490-11e7-b56d-cd7a1708abd5'
-            },
-            MessageId: '0100015f332ac237-a484368a-0465-4a7c-affd-ea8af600ae27-000000'
-          }
-        ) 
+        resolve({
+          ResponseMetadata: {
+            RequestId: 'c9c2b3a9-b490-11e7-b56d-cd7a1708abd5'
+          },
+          MessageId: '0100015f332ac237-a484368a-0465-4a7c-affd-ea8af600ae27-000000'
+        }
+        )
       })
     }
     const ses = new aws.SES()
     return new Promise((resolve, reject) => {
       ses.sendEmail(params, (err, data) => {
-        console.log('ERROR', err) 
-        console.log('Data', data) 
+        console.log('ERROR', err)
+        console.log('Data', data)
         if (err) {
           reject(err)
         } else {

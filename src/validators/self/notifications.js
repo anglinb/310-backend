@@ -6,4 +6,3 @@ module.exports = {
     frequency: Joi.string().valid('DAILY', 'WEEKLY', 'MONTHLY', 'NEVER').required()
   }
 }
-

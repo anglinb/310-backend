@@ -1,12 +1,6 @@
 const validate = require('express-validation')
 const notificationUpdateValidation = require('../../validators/self/notifications')
 
-const VALID_KEYS = [
-  'thresholds',
-  'frequency'
-]
-
-
 module.exports = (router, app, db) => {
   router.get('/notifications',
     async (req, res, next) => {

@@ -1,16 +1,15 @@
 const moment = require('moment')
 const app = require('../../../')
 const notifications = require('../../../src/cron/notifications')
-const DateHelper = require('../../../src/helpers/date');
 
 const expect = require('chai').expect
 const correcString = [
   `You are over the 50% threshold in the Food category for budget New Budget. There is $40 left in the budget and you have 5 days left in this budget period.`,
-  `You are over the 50% threshold in the Entertainment category for budget New Budget. There is $30 left in the budget and you have 5 days left in this budget period.`,
+  `You are over the 50% threshold in the Entertainment category for budget New Budget. There is $30 left in the budget and you have 5 days left in this budget period.`
 ].join('\n\n')
 
 describe('notifications', () => {
-  describe.only('integration', () => {
+  describe('integration', () => {
     let NotificationCls
     let UserNotificationCls
     let newUser
@@ -27,9 +26,9 @@ describe('notifications', () => {
         username: 'banglin@usc.edu',
         notifications: {
           frequency: 'DAILY',
-          thresholds: [50, 80],
-        },
-      }) 
+          thresholds: [50, 80]
+        }
+      })
       await newUser.save()
 
       let budget = {
@@ -49,13 +48,13 @@ describe('notifications', () => {
                 amount: 10,
                 name: 'Fast Food'
               }
-            ],
+            ]
           },
           {
             amount: 70,
             name: 'Entertainment',
             slug: 'entertainment',
-            transactions:  [
+            transactions: [
               {
                 amount: 40,
                 name: 'movies'
@@ -69,13 +68,13 @@ describe('notifications', () => {
       dbBudget = new app.db.Budget(budget)
       await dbBudget.save()
     })
-    it('should send the correct notification & update the last notified date',  async () => {
+    it('should send the correct notification & update the last notified date', async () => {
       let notif = new UserNotificationCls({ notifications: { currentDate: moment('2017-09-15') }, user: newUser })
-      let { message, htmlMessage } = await notif.sendNotification()
+      let { message } = await notif.sendNotification()
       expect(message).to.eql(correcString)
     })
 
-    it('notifications should run through all emails',  async () => {
+    it('notifications should run through all emails', async () => {
       let notif = new NotificationCls({ currentDate: moment('2017-09-15') })
       await notif.run()
       // expect(message).to.eql(correcString)
@@ -203,10 +202,10 @@ describe('notifications', () => {
             category2
           ]
         }
-        let results = userNotif.calculateForBudget(budget) 
+        let results = userNotif.calculateForBudget(budget)
         expect(results.length).to.eql(1)
         expect(results[0]).to.eql({
-          metThreshold: 60, 
+          metThreshold: 60,
           category: category1,
           spent: 75,
           daysLeft: 5
@@ -272,14 +271,14 @@ describe('notifications', () => {
           }
         }
         let userNotif = new UserNotificationCls({ notifications: { currentDate }, user })
-        
-        let results = await userNotif.calculateNotifications() 
+
+        let results = await userNotif.calculateNotifications()
         expect(results.length).to.eql(1)
         expect(results[0]).to.eql({
-          budget: budget1, 
+          budget: budget1,
           category:  {
 
-            metThreshold: 60, 
+            metThreshold: 60,
             category: category1,
             spent: 75,
             daysLeft: 5
@@ -346,15 +345,15 @@ describe('notifications', () => {
           }
         }
         let userNotif = new UserNotificationCls({ notifications: { currentDate }, user })
-        
-        let results = await userNotif.sendNotification(true) 
+
+        let results = await userNotif.sendNotification(true)
         expect(results).to.eql(`You are over the 60% threshold in the food category for budget budget1. There is $25 left in the budget and you have 5 days left in this budget period.\n\n`)
         // expect(results.length).to.eql(1)
         // expect(results[0]).to.eql({
-        //   budget: budget1, 
+        //   budget: budget1,
         //   category:  {
 
-        //     metThreshold: 60, 
+        //     metThreshold: 60,
         //     category: category1,
         //     spent: 75,
         //     daysLeft: 5
@@ -365,8 +364,8 @@ describe('notifications', () => {
 
   })
 */
-});
+})
 process.on('unhandledRejection', (reason, p) => {
-  console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
+  console.log('Unhandled Rejection at: Promise', p, 'reason:', reason)
   // application specific logging, throwing an error, or other logic here
-});
+})

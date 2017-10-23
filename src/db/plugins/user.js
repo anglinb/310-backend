@@ -14,7 +14,7 @@ module.exports = (db) => {
           name: 'Personal Expenses',
           resetDate: new Date().getDate() + 1,
           resetType: 'MONTH'
-         },
+        },
         categoryDefaults
       ))
       return budget.save()

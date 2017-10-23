@@ -21,7 +21,7 @@ module.exports = (router, app, db) => {
   router.post('/authenticate',
   validate(authenticationValidation),
   async (req, res, next) => {
-    const data = { 
+    const data = {
       username: req.body.username,
       password: req.body.password
     }
@@ -38,7 +38,7 @@ module.exports = (router, app, db) => {
         username: data.username,
         notifications: {
           frequency: 'DAILY',
-          thresholds: [50, 80],
+          thresholds: [50, 80]
         }
       })
       await newUser.setPassword(data.password)

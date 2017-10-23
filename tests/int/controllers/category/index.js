@@ -94,7 +94,7 @@ describe('[controller] category', () => {
         await request(app)
           .delete('/budgets/' + budget.get('_id').toString() + '/categories/' + 'clothing')
           .set(...user.auth)
-          .expect(204)
+          .expect(200)
         let updatedBudget = await app.db.Budget.findOne({ _id: budget.get('_id') })
         expect(updatedBudget.get('categories').length).to.eql(0)
       })

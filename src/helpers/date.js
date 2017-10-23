@@ -1,36 +1,33 @@
 const moment = require('moment')
 
 class DateHelper {
-
-  constructor({currentDate = moment(), resetDate, resetType}) {
+  constructor ({currentDate = moment(), resetDate, resetType}) {
     this.currentDate = currentDate
-    this.resetDate  = resetDate
-    this.resetType  = resetType
+    this.resetDate = resetDate
+    this.resetType = resetType
   }
 
-  nextResetDate() {
+  nextResetDate () {
     let returnValue
-    if(this.resetType == "MONTH"){
+    if (this.resetType === 'MONTH') {
       returnValue = this.nextResetDateMonth()
-    }
-    else{
+    } else {
       returnValue = this.nextResetDateWeek()
     }
     return returnValue
   }
 
-  previousResetDate() {
+  previousResetDate () {
     let returnValue
-    if(this.resetType == "MONTH"){
+    if (this.resetType === 'MONTH') {
       returnValue = this.previousResetDateMonth()
-    }
-    else{
+    } else {
       returnValue = this.previousResetDateWeek()
     }
     return returnValue
   }
 
-  nextResetDateMonth() {
+  nextResetDateMonth () {
     let nextResetDate
     let dayInCurrentMonth = this.currentDate.clone().date(this.resetDate)
     if (!this.currentDate.isBefore(dayInCurrentMonth)) {
@@ -41,12 +38,12 @@ class DateHelper {
     return nextResetDate
   }
 
-  previousResetDateMonth() {
+  previousResetDateMonth () {
     let nextResetDate = this.nextResetDateMonth()
     return nextResetDate.clone().subtract(1, 'months')
   }
 
-  nextResetDateWeek() {
+  nextResetDateWeek () {
     let nextResetDate
     let dayInCurrentMonth = this.currentDate.clone().date(this.resetDate)
     if (!this.currentDate.isBefore(dayInCurrentMonth)) {
@@ -57,7 +54,7 @@ class DateHelper {
     return nextResetDate
   }
 
-  previousResetDateWeek() {
+  previousResetDateWeek () {
     let nextResetDate = this.nextResetDateWeek()
     return nextResetDate.clone().subtract(7, 'days')
   }

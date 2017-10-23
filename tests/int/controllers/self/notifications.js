@@ -4,18 +4,17 @@ const testHelpers = require('../../testHelpers')
 const app = require('../../../../')
 
 describe('[controller] self notifications', () => {
-
-    let user
-    beforeEach(async () => {
-      let conn = await app.db.mongo.connection()
-      await conn.dropDatabase()
-      user = await testHelpers(app, app.db).createUser()
-      user.user.set('notifications', {
-        frequency: 'DAILY',
-        thresholds: [50, 80],
-      })
-      await user.user.save()
+  let user
+  beforeEach(async () => {
+    let conn = await app.db.mongo.connection()
+    await conn.dropDatabase()
+    user = await testHelpers(app, app.db).createUser()
+    user.user.set('notifications', {
+      frequency: 'DAILY',
+      thresholds: [50, 80]
     })
+    await user.user.save()
+  })
   it('should respond with user notifications settings', async () => {
     await request(app)
       .get('/self/notifications')
