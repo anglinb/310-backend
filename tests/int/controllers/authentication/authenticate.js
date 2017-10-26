@@ -15,7 +15,7 @@ describe('[controller] authentication', () => {
         .send({ username: 'banglin@usc.edu', password: '12345' })
         .expect(200)
         .expect(res => {
-          expect(res.body.status).to.eql('ok')
+          expect(res.body.status).to.eql('ok') // { "status": "ok"}
         })
       let user = await app.db.User.findOne({ username: 'banglin@usc.edu' })
       expect(user).not.to.be.a('null')

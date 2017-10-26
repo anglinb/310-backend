@@ -80,7 +80,8 @@ tests/ - All the tests
 
 The codebase has pretty solid test coverage. Most of the tests are integration tests and are declared in the `tests/int/` directory. There are a few commands to run the test suite. `npm run test` will run everything. 
 
-- `npm run test:int` - Run integration tests
+- `npm run test` - runs all the tests
+- `npm run test:int` - run integration tests
 - `npm run test:int:watch ` - Run the integration tests every time a file changes.
 
 - `npm run test:unit` - Run the unit tests
