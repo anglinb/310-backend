@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "start:dev": "nodemon index.js",
+    "start:dev": "NODE_ENV=development nodemon index.js",
     "cron": "node cron.js",
     "lint": "standard",
     "lint:fix": "standard --fix",
