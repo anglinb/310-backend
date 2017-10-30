@@ -57,7 +57,7 @@ describe('[controller] authentication', () => {
         .expect(res => {
           expect(res.body.status).to.eql('ok')
           let payload = jwt.verify(res.body.authentication, process.env.JWT_SECRET)
-          expect(payload._id).to.eql(user.get('_id').toString())
+          expect(payload.username).to.eql(user.get('username').toString())
         })
     })
   })

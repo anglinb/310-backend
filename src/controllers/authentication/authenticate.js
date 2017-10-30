@@ -7,7 +7,7 @@ const jwt = require('../../helpers/jwt')
 const aws = require('aws-sdk')
 
 let sendJWT = (user, res) => {
-  let token = jwt.create({_id: user.get('_id')})
+  let token = jwt.create({ username: user.get('username') })
   res.json({ status: 'ok', authentication: token })
 }
 

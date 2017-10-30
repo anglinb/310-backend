@@ -1,4 +1,3 @@
-const mongodb = require('mongodb')
 const authMiddleware = require('../../src/middlewares/auth')
 const jwtHelper = require('../../src/helpers/jwt')
 const app = require('../../')
@@ -33,7 +32,7 @@ describe('[misc] authentication', () => {
     it('should 401 if the user is not found', async () => {
       let db = { User: { findOne: sinon.stub().returns(null) } }
       let middleware = authMiddleware(app, db)
-      let token = jwtHelper.create({ _id: '59c601cdefb0df41aec44d5e' })
+      let token = jwtHelper.create({ username: 'banglin@usc.edu' })
       let req = { headers: { authorization: 'Bearer ' + token } }
       let res = { sendStatus: sinon.spy() }
       let next = sinon.spy()
@@ -42,14 +41,14 @@ describe('[misc] authentication', () => {
       expect(res.sendStatus.callCount).to.eql(1)
       expect(res.sendStatus.calledWith(401)).to.eql(true)
       expect(db.User.findOne.callCount).to.eql(1)
-      expect(db.User.findOne.calledWith({ _id: mongodb.ObjectID('59c601cdefb0df41aec44d5e') })).to.eql(true)
+      expect(db.User.findOne.calledWith({ username: 'banglin@usc.edu' })).to.eql(true)
     })
 
     it('should set the user if found', async () => {
       let user = {get: () => { return 'banglin@usc.edu' }}
       let db = { User: { findOne: sinon.stub().returns(user) } }
       let middleware = authMiddleware(app, db)
-      let token = jwtHelper.create({ _id: '59c601cdefb0df41aec44d5e' })
+      let token = jwtHelper.create({ username: 'banglin@usc.edu' })
       let req = { headers: { authorization: 'Bearer ' + token } }
       let res = { sendStatus: sinon.spy() }
       let next = sinon.spy()
@@ -57,7 +56,7 @@ describe('[misc] authentication', () => {
       expect(next.callCount).to.eql(1) // Next should get called
       expect(res.sendStatus.callCount).to.eql(0)
       expect(db.User.findOne.callCount).to.eql(1)
-      expect(db.User.findOne.calledWith({ _id: mongodb.ObjectID('59c601cdefb0df41aec44d5e') })).to.eql(true)
+      expect(db.User.findOne.calledWith({ username: 'banglin@usc.edu' })).to.eql(true)
       expect(req.user).to.eql(user)
     })
   })

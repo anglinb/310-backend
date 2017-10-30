@@ -5,6 +5,7 @@ const category = require('../controllers/category')
 const transaction = require('../controllers/transaction')
 const archive = require('../controllers/archive')
 const selfCtrl = require('../controllers/self')
+const debugCtrl = require('../controllers/debug')
 
 const autenticationMiddlewareFactory = require('../middlewares/auth')
 const setBudgetMiddlewareFactory = require('../middlewares/setBudget')
@@ -63,4 +64,10 @@ module.exports = (app, db) => {
         setBudgetMiddleware,
         setCategoryMiddleware,
         transactionController.listCreateRouter)
+
+  if (process.env.NODE_ENV === 'development') {
+    console.log('REEGIERE')
+    let debugController = debugCtrl(app, db)
+    app.use('/_debug', debugController)
+  }
 }

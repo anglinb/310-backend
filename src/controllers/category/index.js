@@ -8,7 +8,6 @@ module.exports = (app, db) => {
   const showUpdateRouter = Router()
   Object.keys(controllers).map((key) => {
     if (key !== 'create') {
-      console.log('registering key', key)
       controllers[key](showUpdateRouter, app, db)
     }
   })
