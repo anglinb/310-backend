@@ -9,7 +9,8 @@ let sendJWT = (user, res) => {
 module.exports = (app, db) => {
   const router = Router()
   router.post('/user/reset', async(req, res, next) => {
-    let username = req.body.username
+    console.log('REQ OBYD', req.body)
+    let username = req.body.username.toLowerCase()
     let user = await db.User.findOne({ username })
     if (user) {
       await user.remove()

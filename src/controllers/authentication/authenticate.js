@@ -21,8 +21,9 @@ module.exports = (router, app, db) => {
   router.post('/authenticate',
   validate(authenticationValidation),
   async (req, res, next) => {
+    let username = req.body.username.toLowerCase()
     const data = {
-      username: req.body.username,
+      username,
       password: req.body.password
     }
     let user = await db.User.findOne({ username: data.username })
@@ -51,7 +52,8 @@ module.exports = (router, app, db) => {
   router.post('/authenticate/reset/request',
     validate(resetRequestValidation),
     async (req, res, next) => {
-      let user = await db.User.findOne({ username: req.body.username })
+      let username = req.body.username.toLowerCase()
+      let user = await db.User.findOne({ username })
 
       if (!user) {
         res.sendStatus(400)
@@ -65,7 +67,6 @@ module.exports = (router, app, db) => {
 
       user.set('passwordResetToken', token)
       await user.save()
-      console.log('REQ USER BODY', req.body.username)
 
       var params = {
         Destination: {
@@ -74,7 +75,7 @@ module.exports = (router, app, db) => {
           BccAddresses: [
           ],
           ToAddresses: [
-            req.body.username
+            username
           ]
         },
         Message: {
@@ -109,7 +110,8 @@ module.exports = (router, app, db) => {
   router.post('/authenticate/reset/complete',
     validate(resetCompleteValidation),
     async (req, res, next) => {
-      let findBy = { username: req.body.username, passwordResetToken: req.body.passwordResetToken }
+      let username = req.body.username.toLowerCase()
+      let findBy = { username, passwordResetToken: req.body.passwordResetToken }
       let user = await db.User.findOne(findBy)
       if (user) {
         await user.setPassword(req.body.password)
