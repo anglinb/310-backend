@@ -15,6 +15,7 @@ describe('notifications', () => {
     let newUser
     let dbBudget
     beforeEach(async () => {
+      process.env.DISABLE_
       let conn = await app.db.mongo.connection()
       await conn.dropDatabase()
 

@@ -6,6 +6,7 @@ const transaction = require('../controllers/transaction')
 const archive = require('../controllers/archive')
 const selfCtrl = require('../controllers/self')
 const debugCtrl = require('../controllers/debug')
+const rollover = require('../controllers/rollover')
 
 const autenticationMiddlewareFactory = require('../middlewares/auth')
 const setBudgetMiddlewareFactory = require('../middlewares/setBudget')
@@ -46,6 +47,14 @@ module.exports = (app, db) => {
     autenticationMiddleware,
     setBudgetMiddleware,
     categoryController.listCreateRouter)
+
+
+  const rolloverController = rollover(app, db)
+  app.use('/budgets/:budgetId/rollover',
+    autenticationMiddleware,
+    setBudgetMiddleware,
+    rolloverController.listCreateRouter
+  )
 
   app.use('/budgets/:budgetId/categories/:categorySlug',
     autenticationMiddleware,

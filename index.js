@@ -4,6 +4,7 @@ const express = require('express')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const routes = require('./src/routes')
+const logger = require('./src/helpers/logger')
 
 if (fs.existsSync(path.join(__dirname, '.env'))) {
   require('dotenv').config()
@@ -21,6 +22,8 @@ routes(app, db)
 app.use(function (err, req, res, next) {
   res.status(400).json(err)
 })
+
+logger(app)
 
 if (typeof require !== 'undefined' && require.main === module) {
   const port = process.env.PORT || 3000

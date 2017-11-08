@@ -1,70 +1,29 @@
 const moment = require('moment')
-const notifications = require('./notifications')
+const notificationsFactory = require('./notifications')
+const archiverFactory = require('./archiver')
 
 class Cron {
-  static build ({currentDate = moment(), db}) {
-    return new Cron({currentDate, db})
+  static build ({currentDate = moment(), db, app}) {
+    return new Cron({currentDate, db, app})
   }
 
-  constructor ({currentDate, db}) {
+  constructor ({currentDate = moment(), db, app}) {
     this.db = db
+    this.app = app
     this.currentDate = currentDate
-    this.archiveBudgets = this.archiveBudgets.bind(this)
+
+    this.archiverCls = archiverFactory(this.app, this.db)
+    this.notifierCls = notificationsFactory(this.app, this.db)
   }
 
   async run () {
-    console.log('Archiving budgets!')
-    await this.archiveBudgets()
-    console.log('Sending notifications!')
-    return this.sendNotifications()
+    // We actually do want to run this before sending notifications b/c we don't want to alert you 
+    // about something that is now irreverent. 
+    let archiver = new this.archiverCls({ currentDate: this.currentDate })
+    await archiver.run()
+    let notifier = new this.notifierCls({ currentDate: this.currentDate })
+    await notifier.run()
   }
+}
 
-  async sendNotifications () {
-    let localNotifications = notifications.Notifications({ currentDate: this.currentDate })
-    return localNotifications.sendNotifications()
-  }
-
-  async archiveBudgets () {
-      // TODO: Deal with month
-    let resetDate = this.currentDate.date()
-    let budgets = await this.db.Budget.find({ resetDate: resetDate, resetType: 'MONTH' })
-    for (var j = 0; j < budgets.length; j++) {
-      let budget = budgets[j]
-      let threshold = this.currentDate.clone()
-      threshold.subtract(4, 'days')
-
-      let lastArchivalDate = moment.utc(budget.get('lastArchivalDate'))
-
-      if (!threshold.isBefore(lastArchivalDate)) {
-          // If we haven't achieved in the last 5 days and today is the reset date, we should move to archieve
-        let budgetArchive = new this.db.BudgetArchive(
-          {
-            budget_id: budget.get('_id'),
-            name: budget.get('name'),
-            categories: budget.get('categories'),
-            resetDate: budget.get('resetDate'),
-            resetType: budget.get('resetType')
-          }
-          )
-        await budgetArchive.save()
-
-        let categories = []
-        let gottenCategories = budget.get('categories')
-        for (var i = 0; i < gottenCategories.length; i++) {
-          let category = gottenCategories[i]
-          let categoryObj = {
-            name: category.get('name'),
-            slug: category.get('slug'),
-            amount: category.get('amount'),
-            transactions: []
-          }
-          categories.push(categoryObj)
-        }
-        budget.set('categories', categories)
-        budget.set('lastArchivalDate', this.currentDate.toDate())
-        await budget.save()
-      }
-    }
-  }
-  }
 module.exports = Cron

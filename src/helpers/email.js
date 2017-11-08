@@ -1,11 +1,12 @@
 const aws = require('aws-sdk')
 
 class EmailSender {
-  constructor ({ toEmail, emailText, emailHTML, emailSubject }) {
+  constructor ({ toEmail, emailText, emailHTML, emailSubject, logger }) {
     this.toEmail = toEmail
     this.emailText = emailText
     this.emailHTML = emailHTML || emailText
     this.emailSubject = emailSubject || 'Sanity Update Email'
+    this.logger = logger || require('./logger')()
 
     // This is probably not the best place to do this but whatever
     aws.config.update({
@@ -44,42 +45,47 @@ class EmailSender {
       },
       Source: process.env.SENDER_EMAIL
     }
-    if (process.env.NODE_ENV === 'test') {
-      console.log('Refusing to send email in test... ', this.toEmail, this.emailText, this.emailHTML, this.emailSubject)
+    if (process.env.NODE_ENV === 'test' || process.env.DISABLE_REAL_EMAIL === "true") {
+      this.logger.debug('[EmailSender] Refusing to send real email. Faking successful send', {
+        disableRealEmail: process.env.DISABLE_REAL_EMAIL,
+        nodeEnv: process.env.NODE_ENV,
+        params, 
+        toEmail: this.toEmail,
+        emailText: this.emailText,
+        emailHTML: this.emailHTML,
+        emailSubject: this.emailSubject,
+      })
       return new Promise((resolve, reject) => {
-        resolve({
+        let data = {
           ResponseMetadata: {
             RequestId: 'c9c2b3a9-b490-11e7-b56d-cd7a1708abd5'
           },
           MessageId: '0100015f332ac237-a484368a-0465-4a7c-affd-ea8af600ae27-000000'
         }
-        )
+        this.logger.debug('[EmailSender] send success', { data })
+        resolve( data )
       })
     }
     const ses = new aws.SES()
+    this.logger.debug('[EmailSender] sending email over ses', {
+      params, 
+      toEmail: this.toEmail,
+      emailText: this.emailText,
+      emailHTML: this.emailHTML,
+      emailSubject: this.emailSubject,
+    })
     return new Promise((resolve, reject) => {
       ses.sendEmail(params, (err, data) => {
-        console.log('ERROR', err)
-        console.log('Data', data)
         if (err) {
+          this.logger.debug('[EmailSender] send failure', { err })
           reject(err)
         } else {
+          this.logger.debug('[EmailSender] send success', { data })
           resolve(data)
         }
       })
     })
   }
-
-    //  , function (err, data) {
-    //   if (err) console.log(err, err.stack) // an error occurred
-    //   else console.log(data)           // successful response
-    //    /*
-    //    data = {
-    //     MessageId: "EXAMPLE78603177f-7a5433e7-8edb-42ae-af10-f0181f34d6ee-000000"
-    //    }
-    //    */
-    //   res.json({ status: 'ok' })
-    // })
 }
 
 module.exports = EmailSender
