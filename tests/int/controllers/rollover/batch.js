@@ -20,7 +20,7 @@ describe('[controller] rollover', () => {
             slug: 'food',
             rolloverAmount: 50,
             rolloverStatus: 'UNKNOWN',
-            transactions: [],
+            transactions: []
           }
         ]
       })
@@ -32,7 +32,7 @@ describe('[controller] rollover', () => {
           .post(`/budgets/${budget.get('_id').toString()}/rollover/_batch`)
           .send({
             data: [
-              { 
+              {
                 categorySlug: 'food',
                 rolloverStatus: 'ACTIVE'
               },
@@ -53,7 +53,7 @@ describe('[controller] rollover', () => {
           .post(`/budgets/${budget.get('_id').toString()}/rollover/_batch`)
           .send({
             data: [
-              { 
+              {
                 categorySlug: 'food',
                 rolloverStatus: 'INACTIVE'
               }

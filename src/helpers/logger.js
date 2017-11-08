@@ -1,7 +1,8 @@
 const bunyan = require('bunyan')
-  , bformat = require('bunyan-format')  
-  , formatOut = bformat({ outputMode: 'short' })
-module.exports = (app, db) =>  {
+const bformat = require('bunyan-format')
+const formatOut = bformat({ outputMode: 'short' })
+
+module.exports = (app, db) => {
   let logger = bunyan.createLogger({
     name: 'app',
     stream: formatOut,

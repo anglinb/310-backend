@@ -5,7 +5,7 @@ module.exports = (router, app, db) => {
   router.post('/_batch',
     validate(rolloverBatchValidation),
     async (req, res, next) => {
-      let rollovers = {} 
+      let rollovers = {}
 
       req.body.data.forEach((rolloverUpdate) => {
         rollovers[rolloverUpdate.categorySlug] = rolloverUpdate.rolloverStatus
@@ -13,7 +13,7 @@ module.exports = (router, app, db) => {
 
       // Linear search through all categories
       let categories = req.budget.get('categories')
-      for(let i = 0; i < categories.length; i++) {
+      for (let i = 0; i < categories.length; i++) {
         let category = categories[i]
 
         // If we have a request to update this category
@@ -28,7 +28,7 @@ module.exports = (router, app, db) => {
       }
 
       req.budget.set('categories', categories)
-      await req.budget.save() 
+      await req.budget.save()
       return res.json(req.budget.toJSON())
-  })
+    })
 }

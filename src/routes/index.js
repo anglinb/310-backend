@@ -48,7 +48,6 @@ module.exports = (app, db) => {
     setBudgetMiddleware,
     categoryController.listCreateRouter)
 
-
   const rolloverController = rollover(app, db)
   app.use('/budgets/:budgetId/rollover',
     autenticationMiddleware,

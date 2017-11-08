@@ -12,16 +12,16 @@ class Cron {
     this.app = app
     this.currentDate = currentDate
 
-    this.archiverCls = archiverFactory(this.app, this.db)
-    this.notifierCls = notificationsFactory(this.app, this.db)
+    this.ArchiverCls = archiverFactory(this.app, this.db)
+    this.NotifierCls = notificationsFactory(this.app, this.db)
   }
 
   async run () {
-    // We actually do want to run this before sending notifications b/c we don't want to alert you 
-    // about something that is now irreverent. 
-    let archiver = new this.archiverCls({ currentDate: this.currentDate })
+    // We actually do want to run this before sending notifications b/c we don't want to alert you
+    // about something that is now irreverent.
+    let archiver = new this.ArchiverCls({ currentDate: this.currentDate })
     await archiver.run()
-    let notifier = new this.notifierCls({ currentDate: this.currentDate })
+    let notifier = new this.NotifierCls({ currentDate: this.currentDate })
     await notifier.run()
   }
 }

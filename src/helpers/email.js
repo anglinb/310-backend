@@ -45,15 +45,15 @@ class EmailSender {
       },
       Source: process.env.SENDER_EMAIL
     }
-    if (process.env.NODE_ENV === 'test' || process.env.DISABLE_REAL_EMAIL === "true") {
+    if (process.env.NODE_ENV === 'test' || process.env.DISABLE_REAL_EMAIL === 'true') {
       this.logger.debug('[EmailSender] Refusing to send real email. Faking successful send', {
         disableRealEmail: process.env.DISABLE_REAL_EMAIL,
         nodeEnv: process.env.NODE_ENV,
-        params, 
+        params,
         toEmail: this.toEmail,
         emailText: this.emailText,
         emailHTML: this.emailHTML,
-        emailSubject: this.emailSubject,
+        emailSubject: this.emailSubject
       })
       return new Promise((resolve, reject) => {
         let data = {
@@ -63,16 +63,16 @@ class EmailSender {
           MessageId: '0100015f332ac237-a484368a-0465-4a7c-affd-ea8af600ae27-000000'
         }
         this.logger.debug('[EmailSender] send success', { data })
-        resolve( data )
+        resolve(data)
       })
     }
     const ses = new aws.SES()
     this.logger.debug('[EmailSender] sending email over ses', {
-      params, 
+      params,
       toEmail: this.toEmail,
       emailText: this.emailText,
       emailHTML: this.emailHTML,
-      emailSubject: this.emailSubject,
+      emailSubject: this.emailSubject
     })
     return new Promise((resolve, reject) => {
       ses.sendEmail(params, (err, data) => {

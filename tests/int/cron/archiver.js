@@ -5,21 +5,19 @@ const archiverFactory = require('../../../src/cron/archiver')
 const expect = require('chai').expect
 
 describe('archiver', () => {
-
   let archiver
   beforeEach(async () => {
-    process.env.LOG_LEVEL="fatal"
+    process.env.LOG_LEVEL = 'fatal'
     let conn = await app.db.mongo.connection()
     await conn.dropDatabase()
     archiver = archiverFactory(app, app.db)
   })
 
   describe('BudgetArchival', () => {
-
-    let budgetArchival
+    let BudgetArchival
     let budget
-    beforeEach(async () =>{
-      budgetArchival = archiver.BudgetArchival
+    beforeEach(async () => {
+      BudgetArchival = archiver.BudgetArchival
       budget = new app.db.Budget({
         name: 'New Budget',
         categories: [
@@ -32,7 +30,7 @@ describe('archiver', () => {
                 name: 'dinner',
                 description: 'was dope',
                 amount: 20,
-                recurring: false,
+                recurring: false
               },
               {
                 name: 'Subscription',
@@ -45,7 +43,7 @@ describe('archiver', () => {
         ],
         resetDate: 2,
         resetType: 'MONTH',
-        lastArchivalDate: moment('2017-01-02').toDate(),
+        lastArchivalDate: moment('2017-01-02').toDate()
       })
       await budget.save()
     })
@@ -53,23 +51,23 @@ describe('archiver', () => {
     it('should return correctly for shouldArchive', () => {
       // Should archive
       let currentDate = moment('2017-02-02')
-      let archival = new budgetArchival({ currentDate, budget })
+      let archival = new BudgetArchival({ currentDate, budget })
       expect(archival.shouldArchive()).to.eql(true)
 
       // Correct day, already run
       currentDate = moment('2017-01-02')
-      archival = new budgetArchival({ currentDate, budget })
+      archival = new BudgetArchival({ currentDate, budget })
       expect(archival.shouldArchive()).to.eql(false)
 
-      // Less than 4 days for some reason      
+      // Less than 4 days for some reason
       currentDate = moment('2017-01-03')
-      archival = new budgetArchival({ currentDate, budget })
+      archival = new BudgetArchival({ currentDate, budget })
       expect(archival.shouldArchive()).to.eql(false)
     })
 
     it('should create a new archive', async () => {
       let currentDate = moment('2017-02-02')
-      let archival = new budgetArchival({ currentDate, budget })
+      let archival = new BudgetArchival({ currentDate, budget })
       await archival.createArchive()
       let archives = await app.db.BudgetArchive.find({ budget_id: budget.get('_id') })
       expect(archives.length).to.eql(1)
@@ -77,9 +75,9 @@ describe('archiver', () => {
       expect(archives[0].get('resetDate')).to.eql(2)
     })
 
-    it('should successfully clear budget, leaving recurring transactions', async ()=> {
+    it('should successfully clear budget, leaving recurring transactions', async () => {
       let currentDate = moment('2017-02-02')
-      let archival = new budgetArchival({ currentDate, budget })
+      let archival = new BudgetArchival({ currentDate, budget })
       await archival.clearBudget()
       let dbBudget = await app.db.Budget.findOne({ _id: budget.get('_id') })
       let transactions = dbBudget.get('categories')[0].get('transactions')
@@ -88,11 +86,10 @@ describe('archiver', () => {
       expect(transactions[0].get('name')).to.eql('Subscription')
     })
 
-    describe.only('rollover', () => {
-
-      it('should successfully clear budget and setup rollover', async ()=> {
+    describe('rollover', () => {
+      it('should successfully clear budget and setup rollover', async () => {
         let currentDate = moment('2017-02-02')
-        let archival = new budgetArchival({ currentDate, budget })
+        let archival = new BudgetArchival({ currentDate, budget })
         await archival.clearBudget()
         let dbBudget = await app.db.Budget.findOne({ _id: budget.get('_id') })
         let categories = dbBudget.get('categories')
@@ -100,14 +97,14 @@ describe('archiver', () => {
         expect(categories[0].get('rolloverStatus')).to.eql('UNKNOWN')
       })
 
-      it('should successfully clear budget and not provide rollover', async ()=> {
+      it('should successfully clear budget and not provide rollover', async () => {
         // Setup the budget to be over the amount
         let transactions = budget.get('categories')[0].get('transactions')
         transactions.push({
           name: 'a lot of foodz',
           description: 'wfdlksjdas dope',
           amount: 100,
-          recurring: false,
+          recurring: false
         })
         let categories = budget.get('categories')
         categories[0].set('transactions', transactions)
@@ -115,7 +112,7 @@ describe('archiver', () => {
         await budget.save()
 
         let currentDate = moment('2017-02-02')
-        let archival = new budgetArchival({ currentDate, budget })
+        let archival = new BudgetArchival({ currentDate, budget })
         await archival.clearBudget()
         let dbBudget = await app.db.Budget.findOne({ _id: budget.get('_id') })
         let dbCategories = dbBudget.get('categories')
@@ -126,7 +123,7 @@ describe('archiver', () => {
 
     it('should correctly archive the budget', async () => {
       let currentDate = moment('2017-02-02')
-      let archival = new budgetArchival({ currentDate, budget })
+      let archival = new BudgetArchival({ currentDate, budget })
       await archival.archieveBudget()
       let dbBudget = await app.db.Budget.findOne({ _id: budget.get('_id') })
       let transactions = dbBudget.get('categories')[0].get('transactions')
@@ -138,7 +135,6 @@ describe('archiver', () => {
       expect(archives.length).to.eql(1)
       expect(archives[0].get('name')).to.eql('New Budget')
       expect(archives[0].get('resetDate')).to.eql(2)
-
     })
   })
 
@@ -147,34 +143,32 @@ describe('archiver', () => {
       let inputBudgets = [
         {
           resetDate: 3,
-          resetType: 'MONTH',
+          resetType: 'MONTH'
         },
         {
           resetDate: 2,
-          resetType: 'MONTH',
+          resetType: 'MONTH'
         },
         {
           resetDate: 2,
-          resetType: 'MONTH',
+          resetType: 'MONTH'
         },
         {
           resetDate: 3,
-          resetType: 'WEEK',
+          resetType: 'WEEK'
         },
         {
           resetDate: 2,
-          resetType: 'WEEK',
+          resetType: 'WEEK'
         },
         {
           resetDate: 2,
-          resetType: 'WEEK',
-        },
+          resetType: 'WEEK'
+        }
       ]
-      await Promise.all(inputBudgets.map(async (budget) =>{
+      await Promise.all(inputBudgets.map(async (budget) => {
         return new app.db.Budget(budget).save()
       }))
-
-      let count = await app.db.Budget.find({})
 
       // Monthly
       let currentDate = moment('2017-01-02')
@@ -183,7 +177,6 @@ describe('archiver', () => {
       expect(foundBudgets.length).to.eql(2)
       expect(foundBudgets[0].get('resetDate')).to.eql(2)
       expect(foundBudgets[1].get('resetDate')).to.eql(2)
-
 
       currentDate = moment('2017-01-03')
       archiverFirst = new archiver.Archiver({ currentDate })
