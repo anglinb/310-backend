@@ -21,6 +21,7 @@ module.exports = (app, db) => {
   app.use('/', home(app, db))
   app.use('/', authentication(app, db))
 
+  const transactionController = transaction(app, db)
   const budgetController = budget(app, db)
   app.use('/budgets',
     autenticationMiddleware,
@@ -30,6 +31,11 @@ module.exports = (app, db) => {
     autenticationMiddleware,
     setBudgetMiddleware,
     budgetController.showUpdateRouter)
+
+
+  app.use('/budgets_batch',
+        autenticationMiddleware,
+        transactionController.batchCreateRouter)
 
   const selfController = selfCtrl(app, db)
   app.use('/self',
@@ -61,7 +67,6 @@ module.exports = (app, db) => {
     setCategoryMiddleware,
     categoryController.showUpdateRouter)
 
-  const transactionController = transaction(app, db)
   app.use('/budgets/:budgetId/categories/:categorySlug/transactions/:transactionId',
       autenticationMiddleware,
       setBudgetMiddleware,
@@ -72,11 +77,6 @@ module.exports = (app, db) => {
         setBudgetMiddleware,
         setCategoryMiddleware,
         transactionController.listCreateRouter)
-  app.use('/budgets/:budgetId/categories/:categorySlug/transactions_batch',
-        autenticationMiddleware,
-        transactionController.batchCreateRouter)
-
-
 
   if (process.env.NODE_ENV === 'development') {
     let debugController = debugCtrl(app, db)

@@ -13,7 +13,6 @@ module.exports = (router, app, db) => {
   router.post('/',
     validate(transcationCreateValidation),
     async (req, res, next) => {
-      
       let transactions_to_push = req.body.map((transaction_json) => {
         let transaction = new db.Transaction(Object.assign(
         {},
@@ -23,9 +22,8 @@ module.exports = (router, app, db) => {
           return obj
         }), {'_id': uuidv4()}, {'timestamp': new Date()}
       ))
-      return transaction
+        return transaction
       })
-
 
       let transactions = req.category.get('transactions') || []
       let categories = req.budget.get('categories') || []

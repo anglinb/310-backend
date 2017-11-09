@@ -8,7 +8,7 @@ module.exports = (app, db) => {
   controllers['create_mult'](batchCreateRouter, app, db)
   const showUpdateRouter = Router()
   Object.keys(controllers).map((key) => {
-    if (key !== 'create' && key!=='create_mult' && key !== 'list') {
+    if (key !== 'create' && key !== 'create_mult' && key !== 'list') {
       controllers[key](showUpdateRouter, app, db)
     }
   })
