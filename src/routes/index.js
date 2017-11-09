@@ -73,6 +73,8 @@ module.exports = (app, db) => {
         setCategoryMiddleware,
         transactionController.listCreateRouter)
 
+
+
   if (process.env.NODE_ENV === 'development') {
     let debugController = debugCtrl(app, db)
     app.use('/_debug', debugController)
