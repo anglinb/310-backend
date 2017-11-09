@@ -5,8 +5,7 @@ module.exports = (app, db) => {
     let targetIndex = transactions.findIndex((value) => {
       return req.params.transactionId === value.get('_id')
     })
-    console.log('target index found')
-    console.log(targetIndex)
+
     if (targetIndex === -1) {
       res.sendStatus(404)
       return

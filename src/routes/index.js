@@ -72,6 +72,9 @@ module.exports = (app, db) => {
         setBudgetMiddleware,
         setCategoryMiddleware,
         transactionController.listCreateRouter)
+  app.use('/budgets/:budgetId/categories/:categorySlug/transactions_batch',
+        autenticationMiddleware,
+        transactionController.batchCreateRouter)
 
 
 
