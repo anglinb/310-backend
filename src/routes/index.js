@@ -64,8 +64,10 @@ module.exports = (app, db) => {
   )
 
   app.use('/budgets/:budgetId/categories/:categorySlug',
+
     //autenticationMiddleware,
     //setBudgetMiddleware,
+
     setBudgetNoUserMiddleware,
     setCategoryMiddleware,
     categoryController.showUpdateRouter)
@@ -75,6 +77,7 @@ module.exports = (app, db) => {
       setBudgetMiddleware,
       setCategoryMiddleware, setTransactionMiddleware,
       transactionController.showUpdateRouter)
+
   app.use('/budgets/:budgetId/categories/:categorySlug/transactions',
         autenticationMiddleware,
         setBudgetMiddleware,

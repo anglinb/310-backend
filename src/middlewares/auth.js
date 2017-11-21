@@ -2,8 +2,6 @@ const jwt = require('jsonwebtoken')
 
 module.exports = (app, db) => {
   return async (req, res, next) => {
-    console.log('flkjdsJLFLJKDJLKJLKJLK', req.body)
-    console.log('flkjdsJLFLJKDJLKJLKJLK', req.headers)
     let token = req.headers.authorization ? req.headers.authorization.replace('Bearer', '').trim() : null
     if (!token) {
       res.sendStatus(401)
