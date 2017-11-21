@@ -23,11 +23,11 @@ describe('[model] User', () => {
       await user.save()
       var budgets = await user.budgets()
       expect(budgets.length).to.eql(0)
-      let budget1 = new app.db.Budget({ owner_id: user.get('_id'), name: 'Budget 1' })
+      let budget1 = new app.db.Budget({ owner_ids: [user.get('_id')], name: 'Budget 1' })
       await budget1.save()
       budgets = await user.budgets()
       expect(budgets.length).to.eql(1)
-      let budget2 = new app.db.Budget({ owner_id: user.get('_id'), name: 'Budget 2' })
+      let budget2 = new app.db.Budget({ owner_ids: [user.get('_id')], name: 'Budget 2' })
       await budget2.save()
       budgets = await user.budgets()
       expect(budgets.length).to.eql(2)
@@ -52,7 +52,7 @@ describe('[model] User', () => {
     beforeEach(async () => {
       user = new app.db.User({})
       await user.save()
-      budget = new app.db.Budget({ owner_id: user.get('_id'), name: 'Budget 1' })
+      budget = new app.db.Budget({ owner_ids: [user.get('_id')], name: 'Budget 1' })
       await budget.save()
     })
 
@@ -64,7 +64,7 @@ describe('[model] User', () => {
     it('should return null when the owner is not correct', async () => {
       let otherUser = new app.db.User({})
       await otherUser.save()
-      let otherBudget = new app.db.Budget({ owner_id: otherUser.get('_id'), name: 'Budget not mine' })
+      let otherBudget = new app.db.Budget({ owner_ids: [otherUser.get('_id')], name: 'Budget not mine' })
       await otherBudget.save()
       let ownedBudget = await user.getBudgetIfOwner(otherBudget.get('_id').toString())
       expect(ownedBudget).to.be.a('null')

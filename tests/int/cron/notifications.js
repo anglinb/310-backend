@@ -32,7 +32,7 @@ describe('notifications', () => {
       await newUser.save()
 
       let budget = {
-        owner_id: newUser.get('_id'),
+        owner_ids: [newUser.get('_id')],
         name: 'New Budget',
         categories: [
           {
