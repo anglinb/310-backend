@@ -23,7 +23,7 @@ describe('[controller] budget', () => {
           .send(budgetReq)
           .expect(200)
           .expect(res => {
-            expect(res.body.owner_id).to.eql(user.user.get('_id').toString())
+            expect(res.body.owner_ids[0]).to.eql(user.user.get('_id').toString())
             expect(res.body.name).to.eql('Budget 1 Updated')
           })
         let updatedBudget = await app.db.Budget.findOne({

@@ -42,15 +42,22 @@ module.exports = (router, app, db) => {
       return obj
     }, {})
 
-    return await Promise.all(budget_json).then(async (budget_json) => {
+    return Promise.all(budget_json).then(async (budget_json) => {
       budget_json = budget_json.reduce(function(map, obj) {
 
         map[Object.keys(obj)[0]] = Object.values(obj)[0];
 
         return map;
       }, {});
+      if(budget_json.owner_ids ==undefined) {
+        budget_json.owner_ids =  [req.user.get('_id')]
+        console.log("***************************2.02.02.02.0")
+        let budget = new db.Budget(Object.assign({}, budget_json, categoryDefaults, {lastArchivalDate: moment.unix(0).toDate()}))
+        await budget.save()
+        return res.json(budget.toJSON())
+      }
 
-      return await Promise.all(budget_json.owner_ids).then(async(usernames) => {
+      return Promise.all(budget_json.owner_ids).then(async(usernames) => {
         console.log(usernames)
         budget_json.owner_ids =  [req.user.get('_id')].concat(usernames)
         console.log(budget_json)
