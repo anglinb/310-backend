@@ -25,7 +25,7 @@ module.exports = (db) => {
       if (typeof budgetId === 'string') {
         budgetId = mongodb.ObjectID(budgetId)
       }
-      return db.Budget.findOne({_id: budgetId, owner_ids: this.get("_id") })
+      return db.Budget.findOne({_id: budgetId, owner_ids: [this.get("_id")] })
     }
   })
 }
