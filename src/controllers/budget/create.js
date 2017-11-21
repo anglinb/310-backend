@@ -15,27 +15,28 @@ module.exports = (router, app, db) => {
         obj[key] = req.body[key]
       else {
         if(req.body[key]!==undefined) {
-
-          let usernames = req.body[key]
-          let owner_ids = await usernames.map(async(username) => {
-            let user = await db.User.findOne({username})
-            if (!user) {
-              res.sendStatus(400)
-              res.json({
-                error: {
-                  message: 'A user not found'
-                }
-              })
-            }
-
-
-            return user.get('_id')
-          })
-
+          let currentUser = req.user.get("username")
+          let usernames = req.body[key].filter(function(element) {
+              return element !== currentUser;
+          });
+          if(usernames.length>0) {
+            let owner_ids = await usernames.map(async(username) => {
+              let user = await db.User.findOne({username})
+              if (!user) {
+                res.sendStatus(400)
+                res.json({
+                  error: {
+                    message: 'A user not found'
+                  }
+                })
+              }
 
 
+              return user.get('_id')
+            })
 
-          obj["owner_ids"] = owner_ids
+            obj["owner_ids"] = owner_ids
+          } 
         }
       }
 
@@ -51,7 +52,7 @@ module.exports = (router, app, db) => {
       }, {});
       if(budget_json.owner_ids ==undefined) {
         budget_json.owner_ids =  [req.user.get('_id')]
-        console.log("***************************2.02.02.02.0")
+
         let budget = new db.Budget(Object.assign({}, budget_json, categoryDefaults, {lastArchivalDate: moment.unix(0).toDate()}))
         await budget.save()
         return res.json(budget.toJSON())

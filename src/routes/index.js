@@ -10,12 +10,14 @@ const rollover = require('../controllers/rollover')
 
 const autenticationMiddlewareFactory = require('../middlewares/auth')
 const setBudgetMiddlewareFactory = require('../middlewares/setBudget')
+const setBudgetAndAuthMiddlewareFactory = require('../middlewares/authBudgetNoUser')
 const setCategoryMiddlewareFactory = require('../middlewares/setCategory')
 const setTransactionMiddlewareFactory = require('../middlewares/setTransaction')
 
 module.exports = (app, db) => {
   let autenticationMiddleware = autenticationMiddlewareFactory(app, db)
   let setBudgetMiddleware = setBudgetMiddlewareFactory(app, db)
+  let setBudgetNoUserMiddleware = setBudgetAndAuthMiddlewareFactory(app, db)
   let setCategoryMiddleware = setCategoryMiddlewareFactory(app, db)
   let setTransactionMiddleware = setTransactionMiddlewareFactory(app, db)
   app.use('/', home(app, db))
@@ -62,8 +64,9 @@ module.exports = (app, db) => {
   )
 
   app.use('/budgets/:budgetId/categories/:categorySlug',
-    autenticationMiddleware,
-    setBudgetMiddleware,
+    //autenticationMiddleware,
+    //setBudgetMiddleware,
+    setBudgetNoUserMiddleware,
     setCategoryMiddleware,
     categoryController.showUpdateRouter)
 
