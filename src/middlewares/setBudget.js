@@ -6,6 +6,7 @@ module.exports = (app, db) => {
       return
     }
     req.budget = budget
+    
     next()
   }
 }

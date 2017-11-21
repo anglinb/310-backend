@@ -13,6 +13,7 @@ process.on('unhandledRejection', (reason, promise) => {
 
 module.exports = (router, app, db) => {
   router.post('/', validate(transcationBatchValidation), async(req, res, next) => {
+    console.log("Helllllllllllllloooooooioiooooooooooo")
     let transactions = req.body.data
     let successful_transactions = []
     console.log('fljsdljfsldli', req.body)

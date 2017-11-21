@@ -11,7 +11,7 @@ describe('[controller] budget', () => {
       let collection = await app.db.Budget.getCollection()
       await collection.remove({})
       user = await testHelpers(app, app.db).createUser()
-      budget = new app.db.Budget({ name: 'Budget 1', owner_id: user.user.get('_id') })
+      budget = new app.db.Budget({ name: 'Budget 1', owner_ids: [user.user.get('_id')]})
       await budget.save()
     })
     describe('update', () => {
@@ -23,12 +23,12 @@ describe('[controller] budget', () => {
           .send(budgetReq)
           .expect(200)
           .expect(res => {
-            expect(res.body.owner_id).to.eql(user.user.get('_id').toString())
+            expect(res.body.owner_ids[0]).to.eql(user.user.get('_id').toString())
             expect(res.body.name).to.eql('Budget 1 Updated')
           })
         let updatedBudget = await app.db.Budget.findOne({
           name: 'Budget 1 Updated',
-          owner_id: user.user.get('_id')
+          owner_ids: [user.user.get('_id')]
         })
         expect(updatedBudget).to.not.be.a('null')
       })

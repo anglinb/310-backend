@@ -21,13 +21,13 @@ describe('[controller] budget', () => {
     describe('with budgets', () => {
       it('should the budgets sorted by created date', async () => {
         let user = await testHelpers(app, app.db).createUser()
-        let budget1 = new app.db.Budget({ name: 'Budget 1', owner_id: user.user.get('_id') })
+        let budget1 = new app.db.Budget({ name: 'Budget 1', owner_ids: [user.user.get('_id')] })
         await budget1.save()
         let user2 = new app.db.User({})
         await user2.save()
-        let budgetNotMine = new app.db.Budget({ name: 'Budget NOt mine', owner_id: user2.get('_id') })
+        let budgetNotMine = new app.db.Budget({ name: 'Budget NOt mine', owner_ids: [user2.get('_id')] })
         await budgetNotMine.save()
-        let budget2 = new app.db.Budget({ name: 'Budget 2', owner_id: user.user.get('_id') })
+        let budget2 = new app.db.Budget({ name: 'Budget 2', owner_ids: [user.user.get('_id')] })
         await budget2.save()
 
         await request(app)

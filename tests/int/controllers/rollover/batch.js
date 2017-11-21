@@ -11,7 +11,7 @@ describe('[controller] rollover', () => {
       user = await testHelpers(app, app.db).createUser()
       budget = new app.db.Budget({
         name: 'Budget 1',
-        owner_id: user.user.get('_id'),
+        owner_ids: [user.user.get('_id')],
         resetDate: 5,
         resetType: 'MONTH',
         categories: [

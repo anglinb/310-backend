@@ -10,6 +10,7 @@ module.exports = (app, db) => {
     }
     req.category = categories[targetIndex]
     req.categoryIndex = targetIndex
+    
     next()
   }
 }
