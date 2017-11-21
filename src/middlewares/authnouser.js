@@ -15,12 +15,8 @@ module.exports = (app, db) => {
       res.sendStatus(401)
       return
     }
-    let user = await db.User.findOne({ username: payload.username })
-    if (!user) {
-      res.sendStatus(401)
-      return
-    }
-    req.user = user
+
+    req.username = payload
     next()
   }
 }
