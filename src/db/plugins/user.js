@@ -4,13 +4,14 @@ const categoryDefaults = require('../../helpers/defaults')
 module.exports = (db) => {
   db.User.use((Model) => {
     Model.prototype.budgets = async function () {
-      return db.Budget.find({ owner_id: this.get('_id') })
+      return db.Budget.find({ owner_ids: this.get('_id') })
     }
 
     Model.prototype.createDefaultBudget = async function () {
       let budget = new db.Budget(Object.assign({},
         {
-          owner_id: this.get('_id'),
+          owner_ids: [this.get('_id')],
+          group: false,
           name: 'Personal Expenses',
           resetDate: new Date().getDate() + 1,
           resetType: 'MONTH'
@@ -24,7 +25,7 @@ module.exports = (db) => {
       if (typeof budgetId === 'string') {
         budgetId = mongodb.ObjectID(budgetId)
       }
-      return db.Budget.findOne({ owner_id: this.get('_id'), _id: budgetId })
+      return db.Budget.findOne({_id: budgetId, owner_ids: [this.get("_id")] })
     }
   })
 }

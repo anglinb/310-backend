@@ -11,7 +11,7 @@ describe('[controller] category', () => {
       let collection = await app.db.Budget.getCollection()
       await collection.remove({})
       user = await testHelpers(app, app.db).createUser()
-      budget = new app.db.Budget({ owner_id: user.user.get('_id'), name: 'Budget Name' })
+      budget = new app.db.Budget({ owner_ids: [user.user.get('_id')], name: 'Budget Name' })
       await budget.save()
     })
     describe('create', () => {
@@ -54,7 +54,7 @@ describe('[controller] category', () => {
       it('should create the category and not allow duplicates', async () => {
         let newBudget = new app.db.Budget({
           name: 'New Budget',
-          owner_id: user.user.get('_id'),
+          owner_ids: [user.user.get('_id')],
           categories: [
             new app.db.Category({ name: 'Food & Restaurants', slug: 'food-restaurants', amount: 50 * 100 }),
             new app.db.Category({ name: 'Rent', slug: 'rent', amount: 500 * 100 })

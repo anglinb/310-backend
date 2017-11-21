@@ -64,8 +64,10 @@ module.exports = (app, db) => {
   )
 
   app.use('/budgets/:budgetId/categories/:categorySlug',
-    // autenticationMiddleware,
-    // setBudgetMiddleware,
+
+    //autenticationMiddleware,
+    //setBudgetMiddleware,
+
     setBudgetNoUserMiddleware,
     setCategoryMiddleware,
     categoryController.showUpdateRouter)

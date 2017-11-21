@@ -11,7 +11,7 @@ describe('[controller] archive', () => {
       user = await testHelpers(app, app.db).createUser()
       budget = new app.db.Budget({
         name: 'Budget 1',
-        owner_id: user.user.get('_id'),
+        owner_ids: [user.user.get('_id')],
         resetDate: 5,
         resetType: 'MONTH',
         categories: []
@@ -32,16 +32,16 @@ describe('[controller] archive', () => {
 
     describe('with budgets', () => {
       it('should the budgets sorted by created date', async () => {
-        let budgetArchive1 = new app.db.BudgetArchive({ name: 'Budget 1', owner_id: user.user.get('_id'), budget_id: budget.get('_id') })
+        let budgetArchive1 = new app.db.BudgetArchive({ name: 'Budget 1', owner_ids: [user.user.get('_id')], budget_id: budget.get('_id') })
         await budgetArchive1.save()
 
         let secondBudget = new app.db.Budget()
         await secondBudget.save()
 
-        let budgetArchiveNotMine = new app.db.BudgetArchive({ name: 'Budget NOt mine', owner_id: user.user.get('_id'), budget_id: secondBudget.get('_id') })
+        let budgetArchiveNotMine = new app.db.BudgetArchive({ name: 'Budget NOt mine', owner_ids: [user.user.get('_id')], budget_id: secondBudget.get('_id') })
         await budgetArchiveNotMine.save()
 
-        let budgetArchive2 = new app.db.BudgetArchive({ name: 'Budget 2', owner_id: user.user.get('_id'), budget_id: budget.get('_id') })
+        let budgetArchive2 = new app.db.BudgetArchive({ name: 'Budget 2', owner_ids: [user.user.get('_id')], budget_id: budget.get('_id') })
         await budgetArchive2.save()
 
         await request(app)

@@ -17,7 +17,9 @@ module.exports = (app, db) => {
     } catch (err) {
       res.sendStatus(401)
       return
-    }      
+
+    }
+
 
     var userId = cache.get(`user:${payload.username}`)
     console.log("ACAHCSLDHS", cache)
@@ -27,7 +29,9 @@ module.exports = (app, db) => {
       cache.put(`user:${payload.username}`, user.get('_id'))
     }
 
-    let budget = await db.Budget.findOne({ _id: mongodb.ObjectID(req.params.budgetId), owner_id: mongodb.ObjectID(userId) })
+
+    let budget = await db.Budget.findOne({ _id: mongodb.ObjectID(req.params.budgetId), owner_ids: [mongodb.ObjectID(userId)] })
+
     if (!budget) {
       res.sendStatus(401)
       return
