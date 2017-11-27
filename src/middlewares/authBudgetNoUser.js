@@ -20,7 +20,6 @@ module.exports = (app, db) => {
     }      
 
     var userId = cache.get(`user:${payload.username}`)
-    console.log("ACAHCSLDHS", cache)
     if (!userId) {
       let user = await db.User.findOne({ username: payload.username })
       userId = user.get('_id')

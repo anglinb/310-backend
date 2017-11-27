@@ -46,20 +46,23 @@ module.exports = (app, db) => {
 
   const archiveController = archive(app, db)
   app.use('/budgets/:budgetId/archives',
-    autenticationMiddleware,
-    setBudgetMiddleware,
+    // autenticationMiddleware,
+    // setBudgetMiddleware,
+    setBudgetNoUserMiddleware,
     archiveController.listCreateRouter)
 
   const categoryController = category(app, db)
   app.use('/budgets/:budgetId/categories',
-    autenticationMiddleware,
-    setBudgetMiddleware,
+    // autenticationMiddleware,
+    // setBudgetMiddleware,
+    setBudgetNoUserMiddleware,
     categoryController.listCreateRouter)
 
   const rolloverController = rollover(app, db)
   app.use('/budgets/:budgetId/rollover',
-    autenticationMiddleware,
-    setBudgetMiddleware,
+    // autenticationMiddleware,
+    // setBudgetMiddleware,
+    setBudgetNoUserMiddleware,
     rolloverController.listCreateRouter
   )
 
