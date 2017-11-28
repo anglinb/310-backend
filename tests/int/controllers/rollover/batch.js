@@ -18,7 +18,7 @@ describe('[controller] rollover', () => {
           {
             name: 'Food',
             slug: 'food',
-            rolloverAmount: 50,
+            rollover: 50,
             rolloverStatus: 'UNKNOWN',
             transactions: []
           }
