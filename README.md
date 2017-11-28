@@ -14,6 +14,7 @@ To get started, make sure you have Node `>= 7.6` installed to handle the `async/
 ```
 git clone git@github.com:anglinb/310-backend.git
 cd 310-backend
+# Please see https://github.com/danschultzer/receipt-scanner for install instructions for the receipt-scanner depdendency
 npm install
 npm run start:dev
 ```

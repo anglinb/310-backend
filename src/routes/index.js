@@ -7,6 +7,7 @@ const archive = require('../controllers/archive')
 const selfCtrl = require('../controllers/self')
 const debugCtrl = require('../controllers/debug')
 const rollover = require('../controllers/rollover')
+const receipt = require('../controllers/receipt')
 
 const autenticationMiddlewareFactory = require('../middlewares/auth')
 const setBudgetMiddlewareFactory = require('../middlewares/setBudget')
@@ -23,8 +24,14 @@ module.exports = (app, db) => {
   app.use('/', home(app, db))
   app.use('/', authentication(app, db))
 
+  const receiptController = receipt(app, db)
   const transactionController = transaction(app, db)
   const budgetController = budget(app, db)
+
+  app.use('/receipts', 
+    // autenticationMiddleware,
+    receiptController.router)
+
   app.use('/budgets',
     autenticationMiddleware,
     budgetController.listCreateRouter)
