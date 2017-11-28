@@ -15,7 +15,7 @@ describe('[controller] receipts', () => {
     await budget.save()
   })
   describe('upload', () => {
-    it('should ', async () => {
+    it('should return a correct response when the image is successfully processed', async () => {
       let projectRoot = app.get('projectRoot')
       let filepath = path.join(app.get('projectRoot'), 'tests/int/controllers/receipt', 'test-receipt.jpg')
       await request(app)
@@ -27,6 +27,19 @@ describe('[controller] receipts', () => {
         .expect(res => {
           expect(res.body.result.amount).to.eql('54.50')
           expect(res.body.result.date).to.eql('2007-07-30')
+        })
+    }).timeout(5000)
+    it('should status error image fails', async () => {
+      let projectRoot = app.get('projectRoot')
+      let filepath = path.join(app.get('projectRoot'), 'tests/int/controllers/receipt', 'test-receipt-error.jpg')
+      await request(app)
+        .post('/receipts/upload')
+        .set(...user.auth)
+        .attach('receipt', filepath)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect(res => {
+          expect(res.body.status).to.eql('failed')
         })
     }).timeout(5000)
   })

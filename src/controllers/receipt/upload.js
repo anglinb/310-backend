@@ -37,7 +37,7 @@ module.exports = (router, app, db) => {
       let directory = path.join(app.get('projectRoot'), 'uploads')
       return scanner(req.file.path)
         .parse((error, result) => {
-        if (error) {
+        if (error || result.amount === false) {
           res.json(Object.assign({}, { status: 'failed' }, { error }))
           return 
         }
