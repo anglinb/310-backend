@@ -61,7 +61,7 @@ describe('[model] User', () => {
       expect(ownedBudget.get('name')).to.eql('Budget 1')
     })
 
-    it.only('should get budget when there are multiple owners', async () => {
+    it('should get budget when there are multiple owners', async () => {
       budget.set('owner_ids', [user.get('_id'), '09320923093209'])
       await budget.save()
       let ownedBudget = await user.getBudgetIfOwner(budget.get('_id').toString())

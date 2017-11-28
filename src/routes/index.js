@@ -8,12 +8,15 @@ const selfCtrl = require('../controllers/self')
 const debugCtrl = require('../controllers/debug')
 const rollover = require('../controllers/rollover')
 const receipt = require('../controllers/receipt')
+const sync = require('../controllers/sync')
+const invite = require('../controllers/invite')
 
 const autenticationMiddlewareFactory = require('../middlewares/auth')
 const setBudgetMiddlewareFactory = require('../middlewares/setBudget')
 const setBudgetAndAuthMiddlewareFactory = require('../middlewares/authBudgetNoUser')
 const setCategoryMiddlewareFactory = require('../middlewares/setCategory')
 const setTransactionMiddlewareFactory = require('../middlewares/setTransaction')
+const setBudgetNoAuthMiddlewareFactory = require('../middlewares/setBudgetNoAuth')
 
 module.exports = (app, db) => {
   let autenticationMiddleware = autenticationMiddlewareFactory(app, db)
@@ -21,12 +24,25 @@ module.exports = (app, db) => {
   let setBudgetNoUserMiddleware = setBudgetAndAuthMiddlewareFactory(app, db)
   let setCategoryMiddleware = setCategoryMiddlewareFactory(app, db)
   let setTransactionMiddleware = setTransactionMiddlewareFactory(app, db)
+  let setBudgetNoAuth = setBudgetNoAuthMiddlewareFactory(app, db)
   app.use('/', home(app, db))
   app.use('/', authentication(app, db))
 
   const receiptController = receipt(app, db)
   const transactionController = transaction(app, db)
   const budgetController = budget(app, db)
+  const syncController = sync(app, db)
+  const inviteController = invite(app, db)
+
+  app.use('/budgets/:budgetId/invites',
+    autenticationMiddleware,
+    setBudgetNoAuth,
+    inviteController.listCreateRouter)
+
+  app.use('/sync', 
+    autenticationMiddleware,
+    syncController.router
+  )
 
   app.use('/receipts', 
     autenticationMiddleware,
@@ -50,6 +66,10 @@ module.exports = (app, db) => {
   app.use('/self',
     autenticationMiddleware,
     selfController)
+
+  // app.use('/budgets/:budgetId/invites',
+  //   autenticationMiddleware,
+  //   inviteController.listCreateRouter)
 
   const archiveController = archive(app, db)
   app.use('/budgets/:budgetId/archives',
