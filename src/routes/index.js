@@ -29,7 +29,7 @@ module.exports = (app, db) => {
   const budgetController = budget(app, db)
 
   app.use('/receipts', 
-    // autenticationMiddleware,
+    autenticationMiddleware,
     receiptController.router)
 
   app.use('/budgets',
