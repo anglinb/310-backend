@@ -5,7 +5,7 @@ module.exports = (app, db) => {
   let exp = {}
   exp.createUser = async (params = {}) => {
     let obj = {}
-    let username = faker.internet.email()
+    let username = faker.internet.email().toLowerCase()
     let user = new db.User(Object.assign({}, { username }, params))
     await user.save()
     obj.user = user
