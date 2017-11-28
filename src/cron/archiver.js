@@ -21,7 +21,10 @@ module.exports = (app, db) => {
         name: this.budget.get('name'),
         categories: this.budget.get('categories'),
         resetDate: this.budget.get('resetDate'),
-        resetType: this.budget.get('resetType')
+        resetType: this.budget.get('resetType'),
+        rollover: this.budget.get('rollover'),
+        rolloverStatus: this.budget.get('rolloverStatus'),
+        archivedDate: this.currentDate.toDate(),
       })
       return budgetArchive.save()
     }
