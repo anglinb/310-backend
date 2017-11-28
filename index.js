@@ -26,7 +26,7 @@ routes(app, db)
 app.use(function (err, req, res, next) {
   res.status(400).json(err)
 })
-
+app.set('projectRoot', __dirname)
 
 
 if (typeof require !== 'undefined' && require.main === module) {
